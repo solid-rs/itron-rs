@@ -30,7 +30,7 @@ impl ErrorKind for ExitError {
 /// `sns_ker` are unsafe to call.
 #[inline]
 #[doc(alias = "sns_ker")]
-pub fn is_kernel_operational() -> bool {
+pub fn is_operational() -> bool {
     match () {
         #[cfg(not(feature = "none"))]
         () => (unsafe { abi::sns_key() } == 0),
