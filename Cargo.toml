@@ -1,0 +1,30 @@
+[package]
+name = "itron"
+version = "0.0.0"
+edition = "2018"
+publish = false
+
+[features]
+default = []
+nightly = ["doc_cfg"]
+doc_cfg = []
+
+# --------------------------------------------------------
+# Kernel selection
+none = ["dcre"]
+asp3 = []
+
+# --------------------------------------------------------
+# Kernel customization
+
+# Dynamic object creation. Enables owned wrapped types.
+dcre = []
+
+# "Restricted" tasks
+rstr_task = []
+
+[dependencies]
+
+
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "feature=\"doc_cfg\""]
