@@ -23,6 +23,56 @@ impl ErrorKind for ExitError {
     }
 }
 
+/// `sns_ctx`: Get a flag indicating whether the current thread is in a task
+/// context.
+#[inline]
+#[doc(alias = "sns_ctx")]
+pub fn is_task_context() -> bool {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => (unsafe { abi::sns_ctx() } == 0),
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `sns_loc`: Get a flag indicating whether the CPU lock state is active.
+#[inline]
+#[doc(alias = "sns_loc")]
+pub fn is_cpu_lock_active() -> bool {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => (unsafe { abi::sns_loc() } != 0),
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `sns_dsp`: Get a flag indicating whether dispatching is disabled.
+#[inline]
+#[doc(alias = "sns_dsp")]
+pub fn is_dispatching_disabled() -> bool {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => (unsafe { abi::sns_dsp() } != 0),
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `sns_dpn`: Get a flag indicating whether the dispatch pending state is
+/// active.
+#[inline]
+#[doc(alias = "sns_dpn")]
+pub fn is_dispatch_pending_active() -> bool {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => (unsafe { abi::sns_dpn() } != 0),
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
 /// `sns_ker`: Get a flag indicating whether the kernel is in an operational
 /// state.
 ///
