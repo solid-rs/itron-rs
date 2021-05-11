@@ -144,6 +144,8 @@ impl ErrorKind for PriorityError {
 
 define_error_kind! {
     /// Error type for [`TaskRef::delete`].
+    #[cfg(feature = "dcre")]
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
     pub enum DeleteError {
         #[cfg(not(feature = "none"))]
         BadContext,
@@ -156,6 +158,7 @@ define_error_kind! {
     }
 }
 
+#[cfg(feature = "dcre")]
 impl ErrorKind for DeleteError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
@@ -275,6 +278,7 @@ impl TaskRef<'_> {
     /// `del_tsk`: Delete the task.
     #[inline]
     #[doc(alias = "del_tsk")]
+    #[cfg(feature = "dcre")]
     #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
     pub unsafe fn delete(self) -> Result<(), Error<DeleteError>> {
         match () {
