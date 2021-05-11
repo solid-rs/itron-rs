@@ -33,7 +33,7 @@ impl ErrorKind for ExitError {
 pub fn is_operational() -> bool {
     match () {
         #[cfg(not(feature = "none"))]
-        () => (unsafe { abi::sns_key() } == 0),
+        () => (unsafe { abi::sns_ker() } == 0),
         #[cfg(feature = "none")]
         () => unimplemented!(),
     }
