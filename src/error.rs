@@ -8,6 +8,16 @@
 //!
 //! TODO: describe error kind types
 //!
+//! # Critical Errors
+//!
+//! The following errors may be escalated to panics or undefined behaviors:
+//!
+//!  - Kernel integrity errors (some cases of `E_SYS` in the TOPPERS
+//!    kernels).
+//!
+//!  - Memory access permission errors (`E_MACV`) caused by pointers that are
+//!    supposed to be accessible by the current thread (e.g., pointers referring
+//!    to local variables).
 //!
 use core::{fmt, marker::PhantomData, num::NonZeroIsize};
 

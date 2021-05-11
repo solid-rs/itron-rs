@@ -127,8 +127,7 @@ define_error_kind! {
 impl ErrorKind for PriorityError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
-            // It's unreasonable for `E_MACV` to be returned, so it's
-            // excluded from here
+            // `E_MACV` is a critical error, so it's excluded from here
             #[cfg(not(feature = "none"))]
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
