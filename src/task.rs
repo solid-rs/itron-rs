@@ -171,6 +171,10 @@ impl ErrorKind for DeleteError {
         }
     }
 }
+
+/// Task priority value.
+pub type Priority = abi::PRI;
+
 /// A borrowed reference to a task.
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct TaskRef<'a> {
@@ -240,7 +244,7 @@ impl TaskRef<'_> {
     /// `chg_pri`: Change the task's priority.
     #[inline]
     #[doc(alias = "chg_pri")]
-    pub fn set_priority(self, new_priority: abi::PRI) -> Result<(), Error<SetPriorityError>> {
+    pub fn set_priority(self, new_priority: Priority) -> Result<(), Error<SetPriorityError>> {
         match () {
             #[cfg(not(feature = "none"))]
             () => unsafe {
@@ -255,7 +259,7 @@ impl TaskRef<'_> {
     /// `get_pri`: Get the task's priority.
     #[inline]
     #[doc(alias = "get_pri")]
-    pub fn priority(self) -> Result<abi::PRI, Error<PriorityError>> {
+    pub fn priority(self) -> Result<Priority, Error<PriorityError>> {
         match () {
             #[cfg(not(feature = "none"))]
             () => unsafe {
