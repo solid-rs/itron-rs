@@ -23,6 +23,15 @@ impl ErrorKind for ExitError {
     }
 }
 
+// TODO: rot_rdq
+// TODO: get_tid
+// TODO: get_lod
+// TODO: get_nth
+// TODO: loc_cpu
+// TODO: unl_cpu
+// TODO: dis_dsp
+// TODO: ena_dsp
+
 /// `sns_ctx`: Get a flag indicating whether the current thread is in a task
 /// context.
 #[inline]

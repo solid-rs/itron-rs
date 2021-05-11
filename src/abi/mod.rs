@@ -9,3 +9,9 @@ mod system;
 mod task;
 mod types;
 pub use self::{error::*, system::*, task::*, types::*};
+
+// TODO: TOPPERS/ASP3 時間管理機能
+// TODO: TOPPERS/ASP3 メモリプール管理機能
+// TODO: TOPPERS/ASP3 同期・通信機能
+// TODO: TOPPERS/ASP3 タスク終了機能
+// TODO: TOPPERS/ASP3 タスク付属同期機能
