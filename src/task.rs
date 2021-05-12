@@ -290,6 +290,32 @@ impl ErrorKind for ExitError {
     }
 }
 
+define_error_kind! {
+    /// Error type for [`disable_termination_error`].
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+    pub enum DisableTerminationError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(any())]
+        AccessDenied,
+    }
+}
+
+impl ErrorKind for DisableTerminationError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+/// Error type for [`enable_termination_error`].
+pub type EnableTerminationError = DisableTerminationError;
+
 /// Task priority value.
 pub type Priority = abi::PRI;
 
@@ -355,6 +381,48 @@ pub unsafe fn exit() -> Error<ExitError> {
     match () {
         #[cfg(not(feature = "none"))]
         () => unsafe { Error::new_unchecked(ErrorCode::new_unchecked(abi::ext_tsk())) },
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `dis_ter`: Disable the termination of the current task.
+#[inline]
+#[doc(alias = "dis_ter")]
+pub fn disable_termination() -> Result<(), Error<DisableTerminationError>> {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => unsafe {
+            Error::err_if_negative(abi::dis_ter())?;
+            Ok(())
+        },
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `ena_ter`: Re-enable the termination of the current task.
+#[inline]
+#[doc(alias = "ena_ter")]
+pub fn enable_termination() -> Result<(), Error<EnableTerminationError>> {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => unsafe {
+            Error::err_if_negative(abi::ena_ter())?;
+            Ok(())
+        },
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `sns_ter`: Determine if the termination is disabled for the current task.
+#[inline]
+#[doc(alias = "sns_ter")]
+pub fn is_termination_disabled() -> bool {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => unsafe { abi::sns_ter() != 0 },
         #[cfg(feature = "none")]
         () => unimplemented!(),
     }
