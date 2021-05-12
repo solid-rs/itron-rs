@@ -182,6 +182,13 @@ impl fmt::Debug for ErrorCode {
     }
 }
 
+impl<Kind: ErrorKind> From<Error<Kind>> for ErrorCode {
+    #[inline]
+    fn from(x: Error<Kind>) -> Self {
+        x.code()
+    }
+}
+
 /// Placeholder for error kind variants.
 ///
 /// **Do not refer to this type in your code!**
