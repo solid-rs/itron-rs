@@ -19,6 +19,8 @@
 //!    supposed to be accessible by the current thread (e.g., pointers referring
 //!    to local variables).
 //!
+//!  - `E_PAR` caused by invalid timeout values.
+//!
 use core::{fmt, marker::PhantomData, num::NonZeroIsize};
 
 #[allow(unused_imports)]

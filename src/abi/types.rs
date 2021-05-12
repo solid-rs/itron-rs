@@ -112,6 +112,11 @@ pub const TMO_FEVR: TMO = TMO::MAX;
 /// ノンブロッキング */
 pub const TMO_NBLK: TMO = TMO::MAX - 1;
 
+/// 相対時間（RELTIM）に指定できる最大値［NGKI0551］
+///
+/// 66分40秒まで指定可
+pub const TMAX_RELTIM: TMO = 4_000_000_000;
+
 /*
  *  アクセス許可パターン
  */
