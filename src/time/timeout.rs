@@ -1,4 +1,3 @@
-//! Temporal quantification
 use crate::abi;
 use core::{convert::TryFrom, time::Duration as StdDuration};
 

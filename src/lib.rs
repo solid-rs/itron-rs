@@ -13,4 +13,9 @@ pub mod error;
 pub mod abi;
 pub mod kernel;
 pub mod task;
-pub mod time;
+
+/// Temporal quantification
+pub mod time {
+    mod timeout;
+    pub use self::timeout::*;
+}
