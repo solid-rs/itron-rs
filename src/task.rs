@@ -176,6 +176,90 @@ impl ErrorKind for DeleteError {
 }
 
 define_error_kind! {
+    /// Error type for [`TaskRef::terminate`].
+    pub enum TerminateError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        AccessDenied,
+        /// Bad state.
+        ///
+        ///  - The task is dormant.
+        ///
+        #[cfg(not(feature = "none"))]
+        BadState,
+        /// Bad state.
+        ///
+        ///  - The current task cannot be terminated,
+        ///
+        #[cfg(not(feature = "none"))]
+        BadParam,
+    }
+}
+
+impl ErrorKind for TerminateError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_OBJ => Some(Self::BadState(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ILUSE => Some(Self::BadParam(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
+    /// Error type for [`TaskRef::raise_termination`].
+    pub enum RaiseTerminationError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        AccessDenied,
+        /// Bad state.
+        ///
+        ///  - The task is dormant.
+        ///
+        #[cfg(not(feature = "none"))]
+        BadState,
+        /// Bad state.
+        ///
+        ///  - The current task cannot be terminated,
+        ///
+        #[cfg(not(feature = "none"))]
+        BadParam,
+    }
+}
+
+impl ErrorKind for RaiseTerminationError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_OBJ => Some(Self::BadState(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ILUSE => Some(Self::BadParam(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
     /// Error type for [`sleep`].
     pub enum SleepError {
         #[cfg(not(feature = "none"))]
@@ -386,7 +470,10 @@ pub unsafe fn exit() -> Error<ExitError> {
     }
 }
 
-/// `dis_ter`: Disable the termination of the current task.
+/// `dis_ter`: Disable the termination of the current task by
+/// [a termination request].
+///
+/// [a termination request]: TaskRef::raise_termination
 #[inline]
 #[doc(alias = "dis_ter")]
 pub fn disable_termination() -> Result<(), Error<DisableTerminationError>> {
@@ -401,7 +488,10 @@ pub fn disable_termination() -> Result<(), Error<DisableTerminationError>> {
     }
 }
 
-/// `ena_ter`: Re-enable the termination of the current task.
+/// `ena_ter`: Re-enable the termination of the current task by
+/// [a termination request].
+///
+/// [a termination request]: TaskRef::raise_termination
 #[inline]
 #[doc(alias = "ena_ter")]
 pub fn enable_termination() -> Result<(), Error<EnableTerminationError>> {
@@ -416,7 +506,10 @@ pub fn enable_termination() -> Result<(), Error<EnableTerminationError>> {
     }
 }
 
-/// `sns_ter`: Determine if the termination is disabled for the current task.
+/// `sns_ter`: Determine if the termination by [a termination request] is
+/// disabled for the current task.
+///
+/// [a termination request]: TaskRef::raise_termination
 #[inline]
 #[doc(alias = "sns_ter")]
 pub fn is_termination_disabled() -> bool {
@@ -542,6 +635,52 @@ impl TaskRef<'_> {
         }
     }
 
+    /// `ter_tsk`: Terminate the task.
+    ///
+    /// # Safety
+    ///
+    /// If the task's stack is reused later, stored local variables are
+    /// destroyed without running their destructors, violating the [pinning]
+    /// requirements.
+    ///
+    /// [pinning]: std::pin
+    #[inline]
+    #[doc(alias = "ter_tsk")]
+    pub unsafe fn terminate(self) -> Result<(), Error<TerminateError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::ter_tsk(self.as_raw()))?;
+                Ok(())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// `ras_ter`: Pend a termination request.
+    ///
+    /// # Safety
+    ///
+    /// If the task's stack is reused later, stored local variables are
+    /// destroyed without running their destructors, violating the [pinning]
+    /// requirements.
+    ///
+    /// [pinning]: std::pin
+    #[inline]
+    #[doc(alias = "ras_ter")]
+    pub unsafe fn raise_termination(self) -> Result<(), Error<RaiseTerminationError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::ras_ter(self.as_raw()))?;
+                Ok(())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
     // TODO: get_tst
     // TODO: ref_tsk
     // TODO: wup_tsk
@@ -549,8 +688,6 @@ impl TaskRef<'_> {
     // TODO: rel_wai
     // TODO: sus_tsk
     // TODO: rsm_tsk
-    // TODO: ras_ter
-    // TODO: ter_tsk
 }
 
 #[cfg(feature = "dcre")]
