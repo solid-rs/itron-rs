@@ -654,6 +654,31 @@ impl ErrorKind for DisableTerminationError {
 /// Error type for [`enable_termination`].
 pub type EnableTerminationError = DisableTerminationError;
 
+/// The error type returned by [`current`] when the CPU lock state is active,
+/// or the current thread is not in a task context.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct BadContextError(());
+
+define_error_kind! {
+    /// Error type for [`current_id`].
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+    pub enum CurrentIdError {
+        /// The CPU lock state is active.
+        #[cfg(not(feature = "none"))]
+        BadContext,
+    }
+}
+
+impl ErrorKind for CurrentIdError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
 /// Task priority value.
 pub type Priority = abi::PRI;
 
@@ -847,6 +872,22 @@ pub fn is_termination_disabled() -> bool {
     }
 }
 
+/// `get_tid`: Get the currently running task's ID.
+#[inline]
+#[doc(alias = "get_tid")]
+pub fn current_id() -> Result<Option<abi::NonNullID>, Error<CurrentIdError>> {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => unsafe {
+            let mut out = MaybeUninit::uninit();
+            Error::err_if_negative(abi::get_tid(out.as_mut_ptr()))?;
+            Ok(abi::NonNullID::new(out.assume_init()))
+        },
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
 /// A borrowed reference to a task.
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct TaskRef<'a> {
@@ -863,6 +904,10 @@ impl fmt::Debug for TaskRef<'_> {
 /// # Object ID conversion
 impl TaskRef<'_> {
     /// Construct a `TaskRef` from a raw object ID.
+    ///
+    /// # Safety
+    ///
+    /// See [Object ID Wrappers](crate#object-id-wrappers).
     #[inline]
     pub const unsafe fn from_raw_nonnull(id: abi::NonNullID) -> Self {
         Self {
@@ -1131,6 +1176,62 @@ impl TaskRef<'_> {
     }
 }
 
+/// Get a reference to the current task.
+///
+/// This function fails if it's called from an interrupt context or the CPU
+/// lock state is active.
+pub fn current() -> Result<Current, BadContextError> {
+    if super::kernel::is_task_context() {
+        match current_id() {
+            Ok(id) => Ok(Current {
+                // Safety: It's allowed to get the current task's `TaskRef`.
+                //         The retrieved `TaskRef` will not outlive the task
+                //         because `Current` is `!Send`.
+                inner: unsafe { TaskRef::from_raw_nonnull(id.unwrap()) },
+                _no_send: PhantomData,
+            }),
+            Err(e) => match e.kind() {
+                CurrentIdError::BadContext(_) => Err(BadContextError(())),
+            },
+        }
+    } else {
+        Err(BadContextError(()))
+    }
+}
+
+/// Represents a reference to the current task. Returned by [`current`].
+///
+/// This type is `!Send`, so it cannot be sent to other threads. This ensures
+/// any `TaskRef`s created from this type do not outlive the referenced task.
+#[derive(Debug, Clone, Copy)]
+pub struct Current {
+    inner: TaskRef<'static>,
+    _no_send: PhantomData<*mut ()>,
+}
+
+impl Current {
+    /// Get the raw object ID.
+    #[inline]
+    pub const fn as_raw(&self) -> abi::ID {
+        self.inner.as_raw()
+    }
+
+    /// Get the raw object ID as [` abi::NonNullID`].
+    #[inline]
+    pub const fn as_raw_nonnull(&self) -> abi::NonNullID {
+        self.inner.as_raw_nonnull()
+    }
+
+    /// Borrow `Current` as [`TaskRef`].
+    ///
+    /// Use this to perform operations on tasks because most of the methods
+    /// are implemented on `TaskRef` but not `Current`.
+    #[inline]
+    pub const fn as_ref(&self) -> TaskRef<'_> {
+        self.inner
+    }
+}
+
 #[cfg(feature = "dcre")]
 pub use self::owned::*;
 
@@ -1165,6 +1266,10 @@ mod owned {
 
     impl Task {
         /// Construct a `Task` from a raw object ID.
+        ///
+        /// # Safety
+        ///
+        /// See [Object ID Wrappers](crate#object-id-wrappers).
         #[inline]
         pub const unsafe fn from_raw_nonnull(id: abi::NonNullID) -> Self {
             Self(unsafe { TaskRef::from_raw_nonnull(id) })
