@@ -230,6 +230,206 @@ impl ErrorKind for InfoError {
 }
 
 define_error_kind! {
+    /// Error type for [`TaskRef::wake`].
+    pub enum WakeError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        NotSupported,
+        #[cfg(any())]
+        AccessDenied,
+        /// Bad state.
+        ///
+        ///  - The task is dormant.
+        ///
+        #[cfg(not(feature = "none"))]
+        BadState,
+        #[cfg(not(feature = "none"))]
+        QueueOverflow,
+    }
+}
+
+impl ErrorKind for WakeError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_OBJ => Some(Self::BadState(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_QOVR => Some(Self::QueueOverflow(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
+    /// Error type for [`TaskRef::cancel_wake_all`].
+    pub enum CancelWakeAllError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        NotSupported,
+        #[cfg(any())]
+        AccessDenied,
+        /// Bad state.
+        ///
+        ///  - The task is dormant.
+        ///
+        #[cfg(not(feature = "none"))]
+        BadState,
+    }
+}
+
+impl ErrorKind for CancelWakeAllError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_OBJ => Some(Self::BadState(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
+    /// Error type for [`TaskRef::release_wait`].
+    pub enum ReleaseWaitError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        NotSupported,
+        #[cfg(any())]
+        AccessDenied,
+        /// Bad state.
+        ///
+        ///  - The task is not waiting.
+        ///
+        #[cfg(not(feature = "none"))]
+        BadState,
+    }
+}
+
+impl ErrorKind for ReleaseWaitError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_OBJ => Some(Self::BadState(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
+    /// Error type for [`TaskRef::suspend`].
+    pub enum SuspendError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        NotSupported,
+        #[cfg(any())]
+        AccessDenied,
+        /// Bad state.
+        ///
+        ///  - The task is dormant.
+        ///  - The task has a pending termination request.
+        ///
+        #[cfg(not(feature = "none"))]
+        BadState,
+        /// The task is already suspended.
+        #[cfg(not(feature = "none"))]
+        QueueOverflow,
+    }
+}
+
+impl ErrorKind for SuspendError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_OBJ | abi::E_RASTER => Some(Self::BadState(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_QOVR => Some(Self::QueueOverflow(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
+    /// Error type for [`TaskRef::resume`].
+    pub enum ResumeError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        NotSupported,
+        #[cfg(any())]
+        AccessDenied,
+        /// Bad state.
+        ///
+        ///  - The task is not suspended.
+        ///
+        #[cfg(not(feature = "none"))]
+        BadState,
+    }
+}
+
+impl ErrorKind for ResumeError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_OBJ => Some(Self::BadState(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
     /// Error type for [`TaskRef::terminate`].
     pub enum TerminateError {
         #[cfg(not(feature = "none"))]
@@ -527,6 +727,9 @@ impl Info {
 }
 
 /// `slp_tsk`: Put the current task to sleep.
+///
+/// The [`TaskRef::wake`] method and this function are semantically similar to
+/// `std::thread::Thread::unpark` and `std::thread::park`, respectively.
 #[inline]
 #[doc(alias = "slp_tsk")]
 pub fn sleep() -> Result<(), Error<SleepError>> {
@@ -799,11 +1002,84 @@ impl TaskRef<'_> {
 
 /// # Synchronization
 impl TaskRef<'_> {
-    // TODO: wup_tsk
-    // TODO: can_wup
-    // TODO: rel_wai
-    // TODO: sus_tsk
-    // TODO: rsm_tsk
+    /// `wup_tsk`: Pend a wake up request for the task.
+    ///
+    /// This method and the [`sleep`] function are semantically similar to
+    /// `std::thread::Thread::unpark` and `std::thread::park`, respectively.
+    #[inline]
+    #[doc(alias = "wup_tsk")]
+    pub fn wake(self) -> Result<(), Error<WakeError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::wup_tsk(self.as_raw()))?;
+                Ok(())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// `can_wup`: Cancel any wake up requests for the task.
+    /// Returns the number of cancelled requests.
+    #[inline]
+    #[doc(alias = "can_wup")]
+    pub fn cancel_wake_all(self) -> Result<usize, Error<CancelWakeAllError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                let count = Error::err_if_negative(abi::can_wup(self.as_raw()))?;
+                Ok(count as usize)
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// `rel_wai`: Forcibly release the task from waiting.
+    #[inline]
+    #[doc(alias = "rel_wai")]
+    pub fn release_wait(self) -> Result<(), Error<ReleaseWaitError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::rel_wai(self.as_raw()))?;
+                Ok(())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// `sus_tsk`: Suspend the task.
+    #[inline]
+    #[doc(alias = "sus_tsk")]
+    pub fn suspend(self) -> Result<(), Error<SuspendError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::sus_tsk(self.as_raw()))?;
+                Ok(())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// `rsm_tsk`: Resume the task.
+    #[inline]
+    #[doc(alias = "rsm_tsk")]
+    pub fn resume(self) -> Result<(), Error<ResumeError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::rsm_tsk(self.as_raw()))?;
+                Ok(())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
 }
 
 /// # Termination
