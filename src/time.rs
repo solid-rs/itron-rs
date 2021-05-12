@@ -129,7 +129,8 @@ impl TryFrom<StdDuration> for Timeout {
 /// Panics if the value is out of range:
 ///
 /// ```should_panic
-/// let _ = itron::time::timeout!(s: 0xffffffffffffffff);
+/// # use itron::time::timeout;
+/// let _ = timeout!(s: 0x7ffffffffffffff * 2);
 /// ```
 ///
 /// Once [`inline_const`] lands, it will be possible to do the check at
@@ -137,13 +138,35 @@ impl TryFrom<StdDuration> for Timeout {
 ///
 /// ```compile_fail
 /// #![feature(inline_const)]
-/// let _ = const { itron::time::timeout!(s: 0xffffffffffffffff) };
+/// # use itron::time::timeout;
+/// let _ = const { timeout!(s: 0x7ffffffffffffff * 2) };
+/// ```
+///
+/// Literal values are validated at compile-time regardless of whether
+/// `const { ... }` is used or not:
+///
+/// ```compile_fail
+/// # use itron::time::timeout;
+/// let _ = timeout!(s: 0xfffffffffffffff);
+/// ```
+///
+/// ```should_panic
+/// # use itron::time::timeout;
+/// // Wrap the expression with `( ... )` to avoid the above behavior and
+/// // cause a runtime panic.
+/// let _ = timeout!(s: (0xfffffffffffffff));
 /// ```
 ///
 /// [`inline_const`]: https://rust-lang.github.io/rfcs/2920-inline-const.html
 #[cfg(feature = "nightly")]
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "nightly")))]
 pub macro timeout {
+    // Compile-time checked literals
+    ($kind:tt: $value:literal) => {{
+        const VALUE: $crate::time::Timeout = $crate::time::timeout!($kind: ($value));
+        VALUE
+    }},
+
     // Seconds
     (s: $value:expr) => {
         $crate::time::expect_valid_timeout($crate::time::Timeout::from_secs($value))
@@ -155,6 +178,14 @@ pub macro timeout {
     // Microseconds
     (us: $value:expr) => {
         $crate::time::expect_valid_timeout($crate::time::Timeout::from_micros($value))
+    },
+    // Microseconds
+    (μs: $value:expr) => {
+        $crate::time::expect_valid_timeout($crate::time::Timeout::from_micros($value))
+    },
+    // Nanoseconds
+    (ns: $value:expr) => {
+        $crate::time::expect_valid_timeout($crate::time::Timeout::from_nanos($value))
     },
 }
 
