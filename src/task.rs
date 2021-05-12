@@ -679,6 +679,72 @@ impl ErrorKind for CurrentIdError {
     }
 }
 
+define_error_kind! {
+    /// Error type for [`TaskRef::raise_termination`].
+    #[cfg(feature = "dcre")]
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+    pub enum BuildError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(any())]
+        AccessDenied,
+        /// Ran out of memory or task IDs.
+        #[cfg(not(feature = "none"))]
+        OutOfMemory,
+        /// Bad parameter.
+        ///
+        ///  - The specified stack region overlaps with an existing memory
+        ///    object (NGKI1060, `E_OBJ`).
+        ///
+        ///  - The specified system stack region is not included a kernel-only
+        ///    memory object (NGKI1057, `E_OBJ`).
+        ///
+        ///  - The specified stack size is too small (NGKI1042, `E_PAR`).
+        ///
+        ///  - The specified system stack size is too small (NGKI1044, `E_PAR`).
+        ///
+        ///  - NGKI5108, `E_PAR`.
+        ///
+        ///  - The kernel configuration requires manual stack specification, but
+        ///    the caller did not specify one (NGKI3907, `E_PAR`).
+        ///
+        ///  - The specified stack does not meet target-specific requirements
+        ///    (NGKI1056, `E_PAR`).
+        ///
+        ///  - The specified system stack does not meet target-specific
+        ///    requirements (NGKI1065, `E_PAR`).
+        ///
+        ///  - The caller requested to create a system task, and `sstk` is
+        ///    non-null (NGKI1068, `E_PAR`).
+        ///
+        ///  - The caller requested to create a system task, `sstksz != 0`,
+        ///    and `stk` is non-null (NGKI1071, `E_PAR`).
+        ///
+        #[cfg(not(feature = "none"))]
+        BadParam,
+    }
+}
+
+#[cfg(feature = "dcre")]
+impl ErrorKind for BuildError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            // `E_MACV` is considered critical, hence excluded
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_NOID | abi::E_NOMEM => Some(Self::OutOfMemory(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_PAR => Some(Self::BadParam(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OBJ => Some(Self::BadParam(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
 /// Task priority value.
 pub type Priority = abi::PRI;
 
@@ -1239,6 +1305,124 @@ pub use self::owned::*;
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
 mod owned {
     use super::*;
+
+    /// The builder type for [tasks](Task). Created by [`Task::build`].
+    ///
+    /// Its generic parameters are an implementation detail.
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+    pub struct Builder<Start, Stack, InitialPriority> {
+        start: Start,
+        stack: Stack,
+        initial_priority: InitialPriority,
+        #[cfg(not(feature = "none"))]
+        raw: abi::T_CTSK,
+    }
+
+    /// Builder field hole types
+    #[allow(non_camel_case_types)]
+    #[doc(hidden)]
+    pub mod builder_hole {
+        pub struct __start_is_not_specified__;
+        pub struct __stack_is_not_specified__;
+        pub struct __initial_priority_is_not_specified__;
+    }
+
+    impl Task {
+        /// `acre_tsk`: Create a builder for `Task`.
+        #[inline]
+        #[doc(alias = "acre_tsk")]
+        pub fn build() -> Builder<
+            builder_hole::__start_is_not_specified__,
+            builder_hole::__stack_is_not_specified__,
+            builder_hole::__initial_priority_is_not_specified__,
+        > {
+            Builder {
+                start: builder_hole::__start_is_not_specified__,
+                stack: builder_hole::__stack_is_not_specified__,
+                initial_priority: builder_hole::__initial_priority_is_not_specified__,
+                #[cfg(not(feature = "none"))]
+                raw: abi::T_CTSK {
+                    tskatr: abi::TA_NULL,
+                    exinf: abi::EXINF::uninit(),
+                    task: None,
+                    itskpri: 0,
+                    stksz: 0,
+                    stk: core::ptr::null_mut(),
+                },
+            }
+        }
+    }
+
+    impl<Start, Stack, InitialPriority> Builder<Start, Stack, InitialPriority> {
+        /// (**Mandatory**) Specify the entry point.
+        #[inline]
+        pub fn start(
+            self,
+            value: impl crate::closure::IntoClosure,
+        ) -> Builder<(), Stack, InitialPriority> {
+            let (task, exinf) = value.into_closure();
+            Builder {
+                start: (),
+                stack: self.stack,
+                initial_priority: self.initial_priority,
+                #[cfg(not(feature = "none"))]
+                raw: abi::T_CTSK {
+                    task: Some(task),
+                    exinf,
+                    ..self.raw
+                },
+            }
+        }
+
+        /// (**Mandatory**) Specify to use an automatically allocated stack
+        /// region of the specified size.
+        #[inline]
+        pub fn stack(self, size: usize) -> Builder<Start, (), InitialPriority> {
+            Builder {
+                start: self.start,
+                stack: (),
+                initial_priority: self.initial_priority,
+                #[cfg(not(feature = "none"))]
+                raw: abi::T_CTSK {
+                    stksz: size,
+
+                    stk: core::ptr::null_mut(),
+                    ..self.raw
+                },
+            }
+        }
+
+        /// (**Mandatory**) Specify the initial priority.
+        #[inline]
+        pub fn initial_priority(self, value: Priority) -> Builder<Start, Stack, ()> {
+            Builder {
+                start: self.start,
+                stack: self.stack,
+                initial_priority: (),
+                #[cfg(not(feature = "none"))]
+                raw: abi::T_CTSK {
+                    itskpri: value,
+                    ..self.raw
+                },
+            }
+        }
+    }
+
+    impl Builder<(), (), ()> {
+        /// Create a task using the specified parameters.
+        pub fn finish(self) -> Result<Task, Error<BuildError>> {
+            match () {
+                #[cfg(not(feature = "none"))]
+                () => unsafe {
+                    let id = Error::err_if_negative(abi::acre_tsk(&self.raw))?;
+                    // Safety: We own the task we create
+                    Ok(Task::from_raw_nonnull(abi::NonNullID::new_unchecked(id)))
+                },
+                #[cfg(feature = "none")]
+                () => unimplemented!(),
+            }
+        }
+    }
 
     /// An owned task.
     ///

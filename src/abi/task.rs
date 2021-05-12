@@ -1,6 +1,14 @@
-use super::{bool_t, uint_t, ATR, ER, ER_UINT, EXINF, ID, PRI, RELTIM, STAT, TMO};
+use super::{bool_t, uint_t, ATR, ER, ER_ID, ER_UINT, EXINF, ID, PRI, RELTIM, STAT, TMO};
 
-pub type TASK = Option<extern "C" fn(EXINF)>;
+pub type TASK = Option<unsafe extern "C" fn(EXINF)>;
+
+/*
+ *  オブジェクト属性の定義
+ */
+/// タスクを起動された状態で生成
+pub const TA_ACT: ATR = 0x01;
+/// 起動要求をキューイングしない
+pub const TA_NOACTQUE: ATR = 0x02;
 
 /*
  *  オブジェクトの状態の定義
@@ -20,7 +28,7 @@ pub const TTS_DMT: STAT = 0x10;
 
 /// TOPPERS/ASP3 dynamic creation extension `T_CTSK`
 #[cfg(all(feature = "asp3", feature = "dcre"))]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy)]
 #[repr(C)]
 pub struct T_CTSK {
     /// タスク属性
@@ -78,7 +86,7 @@ extern "C" {
 
 #[cfg(all(feature = "asp3", feature = "dcre"))]
 extern "C" {
-    pub fn acre_tsk(pk_ctsk: *const T_CTSK) -> ER;
+    pub fn acre_tsk(pk_ctsk: *const T_CTSK) -> ER_ID;
     pub fn del_tsk(tskid: ID) -> ER;
 }
 
