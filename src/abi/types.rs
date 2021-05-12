@@ -42,7 +42,7 @@ pub type PRI = int_t;
 /// タイムアウト指定
 pub type TMO = u32;
 /// 拡張情報
-pub type EXINF = isize;
+pub type EXINF = core::mem::MaybeUninit<isize>;
 /// 相対時間
 pub type RELTIM = u32;
 

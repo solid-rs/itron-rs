@@ -11,6 +11,7 @@
 pub mod error;
 
 pub mod abi;
+pub mod closure;
 pub mod kernel;
 pub mod task;
 

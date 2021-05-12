@@ -1,6 +1,6 @@
 use super::{bool_t, uint_t, ATR, ER, ER_UINT, EXINF, ID, PRI, RELTIM, STAT, TMO};
 
-pub type TASK = extern "C" fn(EXINF);
+pub type TASK = Option<extern "C" fn(EXINF)>;
 
 /*
  *  オブジェクトの状態の定義
