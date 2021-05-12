@@ -45,8 +45,14 @@ pub type TMO = u32;
 pub type EXINF = isize;
 /// 相対時間
 pub type RELTIM = u32;
+
+// Assuming `defined(UINT64_MAX)`
 /// システム時刻
 pub type SYSTIM = u64;
+
+// Assuming `USE_64BIT_HRTCNT`
+/// 高分解能タイマのカウント値
+pub type HRTCNT = u64;
 
 /// プログラムの起動番地
 pub type FP = unsafe fn();
@@ -77,6 +83,18 @@ pub struct acvct {
     /// 参照操作のアクセス許可パターン
     pub acptn4: ACPTN,
 }
+
+/// イベントフラグのビットパターン
+pub type FLGPTN = uint_t;
+
+/// 割込み番号
+pub type INTNO = uint_t;
+
+/// 割込みハンドラ番号
+pub type INHNO = uint_t;
+
+/// CPU例外ハンドラ番号
+pub type EXCNO = uint_t;
 
 /*
  *  オブジェクト属性

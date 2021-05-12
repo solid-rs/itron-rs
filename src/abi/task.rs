@@ -1,4 +1,4 @@
-use super::{bool_t, uint_t, ATR, ER, ER_UINT, EXINF, ID, PRI, STAT, TMO};
+use super::{bool_t, uint_t, ATR, ER, ER_UINT, EXINF, ID, PRI, RELTIM, STAT, TMO};
 
 pub type TASK = extern "C" fn(EXINF);
 
@@ -53,8 +53,7 @@ pub struct T_RTSK {
 extern "C" {
     pub fn act_tsk(tskid: ID) -> ER;
     pub fn can_act(tskid: ID) -> ER_UINT;
-    pub fn ext_tsk() -> ER;
-    pub fn ter_tsk(tskid: ID) -> ER;
+    pub fn get_tst(tskid: ID, p_tskstat: *mut STAT) -> ER;
     pub fn chg_pri(tskid: ID, tskpri: PRI) -> ER;
     pub fn get_pri(tskid: ID, p_tskpri: *mut PRI) -> ER;
     pub fn get_inf(p_exinf: *mut isize) -> ER;
@@ -65,4 +64,28 @@ extern "C" {
 extern "C" {
     pub fn acre_tsk(pk_ctsk: *const T_CTSK) -> ER;
     pub fn del_tsk(tskid: ID) -> ER;
+}
+
+/// タスク付属同期機能
+#[cfg(feature = "asp3")]
+extern "C" {
+    pub fn slp_tsk() -> ER;
+    pub fn tslp_tsk(tmout: TMO) -> ER;
+    pub fn wup_tsk(tskid: ID) -> ER;
+    pub fn can_wup(tskid: ID) -> ER_UINT;
+    pub fn rel_wai(tskid: ID) -> ER;
+    pub fn sus_tsk(tskid: ID) -> ER;
+    pub fn rsm_tsk(tskid: ID) -> ER;
+    pub fn dly_tsk(dlytim: RELTIM) -> ER;
+}
+
+/// タスク終了機能
+#[cfg(feature = "asp3")]
+extern "C" {
+    pub fn ext_tsk() -> ER;
+    pub fn ras_ter(tskid: ID) -> ER;
+    pub fn dis_ter() -> ER;
+    pub fn ena_ter() -> ER;
+    pub fn sns_ter() -> bool_t;
+    pub fn ter_tsk(tskid: ID) -> ER;
 }
