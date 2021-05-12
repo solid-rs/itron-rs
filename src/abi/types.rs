@@ -105,11 +105,11 @@ pub const TA_NULL: ATR = 0;
 /*
  *  タイムアウト指定
  */
-/// ポーリング */
+/// ポーリング
 pub const TMO_POL: TMO = 0;
-/// 永久待ち */
+/// 永久待ち
 pub const TMO_FEVR: TMO = TMO::MAX;
-/// ノンブロッキング */
+/// ノンブロッキング
 pub const TMO_NBLK: TMO = TMO::MAX - 1;
 
 /// 相対時間（RELTIM）に指定できる最大値［NGKI0551］
@@ -120,7 +120,7 @@ pub const TMAX_RELTIM: TMO = 4_000_000_000;
 /*
  *  アクセス許可パターン
  */
-/// カーネルドメインだけにアクセスを許可 */
+/// カーネルドメインだけにアクセスを許可
 pub const TACP_KERNEL: ACPTN = 0;
-/// すべてのドメインからアクセスを許可 */
+/// すべてのドメインからアクセスを許可
 pub const TACP_SHARED: ACPTN = !0;
