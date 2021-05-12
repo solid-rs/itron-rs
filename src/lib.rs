@@ -16,6 +16,10 @@ pub mod task;
 
 /// Temporal quantification
 pub mod time {
+    mod duration;
     mod timeout;
-    pub use self::timeout::*;
+    pub use self::{duration::*, timeout::*};
+    // `use ::*` doesn't work with `pub macro`. This could be a bug.
+    #[cfg(feature = "nightly")]
+    pub use self::{duration::duration, timeout::timeout};
 }

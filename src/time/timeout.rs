@@ -1,7 +1,9 @@
 use crate::abi;
 use core::{convert::TryFrom, time::Duration as StdDuration};
 
-/// A valid timeout value.
+use super::Duration;
+
+/// A valid timeout value ([`abi::TMO`]).
 ///
 /// In addition to finite durations, this type can represent the following
 /// special values:
@@ -50,6 +52,11 @@ impl Timeout {
     #[inline]
     pub const fn as_raw(self) -> abi::TMO {
         self.value
+    }
+
+    #[inline]
+    pub const fn is_finite(self) -> bool {
+        self.value != Self::FOREVER.value
     }
 
     /// Construct a new `Timeout` from the specified number of seconds.
@@ -104,7 +111,7 @@ impl Timeout {
 }
 
 /// The error type returned when a checked duration conversion fails.
-pub struct TryFromDurationError(());
+pub struct TryFromDurationError(pub(super) ());
 
 impl TryFrom<StdDuration> for Timeout {
     type Error = TryFromDurationError;
@@ -112,6 +119,21 @@ impl TryFrom<StdDuration> for Timeout {
     #[inline]
     fn try_from(d: StdDuration) -> Result<Self, Self::Error> {
         Self::from_nanos(d.as_nanos()).ok_or(TryFromDurationError(()))
+    }
+}
+
+impl TryFrom<Duration> for Timeout {
+    type Error = TryFromDurationError;
+
+    #[inline]
+    fn try_from(d: Duration) -> Result<Self, Self::Error> {
+        match () {
+            () => {
+                // In TOPPERS 3rd gen kernel, both types use the same range
+                // Safety: It's a valid timeout value
+                Ok(unsafe { Self::from_raw(d.as_raw()) })
+            }
+        }
     }
 }
 
