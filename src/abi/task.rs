@@ -52,7 +52,6 @@ pub struct T_RTSK {
 #[cfg(feature = "asp3")]
 extern "C" {
     pub fn act_tsk(tskid: ID) -> ER;
-    pub fn iact_tsk(tskid: ID) -> ER;
     pub fn can_act(tskid: ID) -> ER_UINT;
     pub fn ext_tsk() -> ER;
     pub fn ter_tsk(tskid: ID) -> ER;
