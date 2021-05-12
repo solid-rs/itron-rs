@@ -203,6 +203,33 @@ impl ErrorKind for StateError {
 }
 
 define_error_kind! {
+    /// Error type for [`TaskRef::info`].
+    pub enum InfoError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        AccessDenied,
+    }
+}
+
+impl ErrorKind for InfoError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            // `E_MACX` is considered critical, hence excluded
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
     /// Error type for [`TaskRef::terminate`].
     pub enum TerminateError {
         #[cfg(not(feature = "none"))]
@@ -440,6 +467,63 @@ pub enum State {
     Suspended = abi::TTS_SUS as u8,
     WaitingSuspended = abi::TTS_WAS as u8,
     Dormant = abi::TTS_DMT as u8,
+}
+
+impl State {
+    #[inline]
+    unsafe fn from_abi_unchecked(x: abi::STAT) -> Self {
+        unsafe { core::mem::transmute(x as u8) }
+    }
+}
+
+/// Task information returned by [`TaskRef::info`].
+#[derive(Debug, Clone, Copy)]
+pub struct Info {
+    #[cfg(not(feature = "none"))]
+    raw: abi::T_RTSK,
+}
+
+impl Info {
+    /// Get the task's state.
+    #[inline]
+    pub fn state(&self) -> State {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe { State::from_abi_unchecked(self.raw.tskstat) },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// Get the task's current priority.
+    #[inline]
+    pub fn current_priority(&self) -> Priority {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => self.raw.tskpri,
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// Get the task's base priority.
+    #[inline]
+    pub fn base_priority(&self) -> Priority {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => self.raw.tskbpri,
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    // TODO: tskwait
+    // TODO: wobjid
+    // TODO: lefttmo
+    // TODO: actcnt
+    // TODO: wupcnt
+    // TODO: raster
+    // TODO: dister
 }
 
 /// `slp_tsk`: Put the current task to sleep.
@@ -687,14 +771,30 @@ impl TaskRef<'_> {
             () => unsafe {
                 let mut pri = MaybeUninit::uninit();
                 Error::err_if_negative(abi::get_tst(self.as_raw(), pri.as_mut_ptr()))?;
-                Ok(core::mem::transmute::<u8, State>(pri.assume_init() as u8))
+                Ok(State::from_abi_unchecked(pri.assume_init()))
             },
             #[cfg(feature = "none")]
             () => unimplemented!(),
         }
     }
 
-    // TODO: ref_tsk
+    /// `ref_tsk`: Get the task's general information.
+    #[inline]
+    #[doc(alias = "ref_tsk")]
+    pub fn info(self) -> Result<Info, Error<InfoError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                let mut pri = MaybeUninit::uninit();
+                Error::err_if_negative(abi::ref_tsk(self.as_raw(), pri.as_mut_ptr()))?;
+                Ok(Info {
+                    raw: pri.assume_init(),
+                })
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
 }
 
 /// # Synchronization
