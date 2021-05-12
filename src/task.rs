@@ -4,7 +4,7 @@ use core::{fmt, marker::PhantomData, mem::MaybeUninit};
 use crate::{
     abi,
     error::{Error, ErrorCode, ErrorKind, Kind},
-    time::Timeout,
+    time::{Duration, Timeout},
 };
 
 define_error_kind! {
@@ -224,12 +224,44 @@ define_error_kind! {
 impl ErrorKind for SleepTimeoutError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
+            // E_PAR is considered critial, hence excluded
             #[cfg(not(feature = "none"))]
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_TMOUT => Some(Self::Timeout(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_RLWAI => Some(Self::Released(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_RASTER => Some(Self::TerminateRequest(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
+    /// Error type for [`delay`].
+    pub enum DelayError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        NotSupported,
+        #[cfg(not(feature = "none"))]
+        Released,
+        #[cfg(not(feature = "none"))]
+        TerminateRequest,
+    }
+}
+
+impl ErrorKind for DelayError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            // E_PAR is considered critial, hence excluded
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_RLWAI => Some(Self::Released(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
@@ -257,7 +289,7 @@ pub fn sleep() -> Result<(), Error<SleepError>> {
     }
 }
 
-/// `tslp_tsk`: Put the current task to sleep with timeout.
+/// `dly_tsk`: Put the current task to sleep with timeout.
 #[inline]
 #[doc(alias = "tslp_tsk")]
 pub fn sleep_timeout(tmo: Timeout) -> Result<(), Error<SleepTimeoutError>> {
@@ -265,6 +297,21 @@ pub fn sleep_timeout(tmo: Timeout) -> Result<(), Error<SleepTimeoutError>> {
         #[cfg(not(feature = "none"))]
         () => unsafe {
             Error::err_if_negative(abi::tslp_tsk(tmo.as_raw()))?;
+            Ok(())
+        },
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `dly_tsk`: Delay the current task.
+#[inline]
+#[doc(alias = "dly_tsk")]
+pub fn delay(dur: Duration) -> Result<(), Error<DelayError>> {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => unsafe {
+            Error::err_if_negative(abi::dly_tsk(dur.as_raw()))?;
             Ok(())
         },
         #[cfg(feature = "none")]
