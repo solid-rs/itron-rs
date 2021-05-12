@@ -1,0 +1,12 @@
+//! Dataqueues (TODO)
+// TODO: acre_dtq
+// TODO: del_dtq
+// TODO: snd_dtq
+// TODO: psnd_dtq
+// TODO: tsnd_dtq
+// TODO: fsnd_dtq
+// TODO: rcv_dtq
+// TODO: prcv_dtq
+// TODO: trcv_dtq
+// TODO: ini_dtq
+// TODO: ref_dtq

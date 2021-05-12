@@ -1,0 +1,9 @@
+//! Semaphores (TODO)
+// TODO: acre_sem
+// TODO: del_sem
+// TODO: sig_sem
+// TODO: wai_sem
+// TODO: pol_sem
+// TODO: twai_sem
+// TODO: ini_sem
+// TODO: ref_sem

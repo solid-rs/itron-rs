@@ -1,0 +1,10 @@
+//! Eventflags (TODO)
+// TODO: acre_flg
+// TODO: del_flg
+// TODO: set_flg
+// TODO: clr_flg
+// TODO: wai_flg
+// TODO: pol_flg
+// TODO: twai_flg
+// TODO: ini_flg
+// TODO: ref_flg

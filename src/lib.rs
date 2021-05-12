@@ -12,7 +12,12 @@ pub mod error;
 
 pub mod abi;
 pub mod closure;
+pub mod dataqueue;
+pub mod eventflag;
 pub mod kernel;
+pub mod mutex;
+pub mod prioritydataqueue;
+pub mod semaphore;
 pub mod task;
 
 /// Temporal quantification
