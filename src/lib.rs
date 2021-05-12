@@ -14,6 +14,7 @@ pub mod abi;
 pub mod closure;
 pub mod dataqueue;
 pub mod eventflag;
+pub mod interrupt;
 pub mod kernel;
 pub mod memorypool;
 pub mod mutex;
