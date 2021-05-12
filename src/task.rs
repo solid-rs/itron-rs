@@ -534,6 +534,7 @@ impl fmt::Debug for TaskRef<'_> {
     }
 }
 
+/// # Object ID conversion
 impl TaskRef<'_> {
     /// Construct a `TaskRef` from a raw object ID.
     #[inline]
@@ -555,7 +556,10 @@ impl TaskRef<'_> {
     pub const fn as_raw_nonnull(self) -> abi::NonNullID {
         self.id
     }
+}
 
+/// # Management
+impl TaskRef<'_> {
     /// `act_tsk`: Pend an activation request for the task.
     #[inline]
     #[doc(alias = "act_tsk")]
@@ -635,6 +639,21 @@ impl TaskRef<'_> {
         }
     }
 
+    // TODO: get_tst
+    // TODO: ref_tsk
+}
+
+/// # Synchronization
+impl TaskRef<'_> {
+    // TODO: wup_tsk
+    // TODO: can_wup
+    // TODO: rel_wai
+    // TODO: sus_tsk
+    // TODO: rsm_tsk
+}
+
+/// # Termination
+impl TaskRef<'_> {
     /// `ter_tsk`: Terminate the task.
     ///
     /// # Safety
@@ -680,14 +699,6 @@ impl TaskRef<'_> {
             () => unimplemented!(),
         }
     }
-
-    // TODO: get_tst
-    // TODO: ref_tsk
-    // TODO: wup_tsk
-    // TODO: can_wup
-    // TODO: rel_wai
-    // TODO: sus_tsk
-    // TODO: rsm_tsk
 }
 
 #[cfg(feature = "dcre")]
