@@ -375,7 +375,7 @@ impl ErrorKind for ExitError {
 }
 
 define_error_kind! {
-    /// Error type for [`disable_termination_error`].
+    /// Error type for [`disable_termination`].
     #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
     pub enum DisableTerminationError {
         #[cfg(not(feature = "none"))]
@@ -397,7 +397,7 @@ impl ErrorKind for DisableTerminationError {
     }
 }
 
-/// Error type for [`enable_termination_error`].
+/// Error type for [`enable_termination`].
 pub type EnableTerminationError = DisableTerminationError;
 
 /// Task priority value.
@@ -458,7 +458,7 @@ pub fn delay(dur: Duration) -> Result<(), Error<DelayError>> {
 /// destroyed without running their destructors, violating the [pinning]
 /// requirements.
 ///
-/// [pinning]: std::pin
+/// [pinning]: core::pin
 #[inline]
 #[doc(alias = "ext_tsk")]
 pub unsafe fn exit() -> Error<ExitError> {
@@ -662,7 +662,7 @@ impl TaskRef<'_> {
     /// destroyed without running their destructors, violating the [pinning]
     /// requirements.
     ///
-    /// [pinning]: std::pin
+    /// [pinning]: core::pin
     #[inline]
     #[doc(alias = "ter_tsk")]
     pub unsafe fn terminate(self) -> Result<(), Error<TerminateError>> {
@@ -685,7 +685,7 @@ impl TaskRef<'_> {
     /// destroyed without running their destructors, violating the [pinning]
     /// requirements.
     ///
-    /// [pinning]: std::pin
+    /// [pinning]: core::pin
     #[inline]
     #[doc(alias = "ras_ter")]
     pub unsafe fn raise_termination(self) -> Result<(), Error<RaiseTerminationError>> {
