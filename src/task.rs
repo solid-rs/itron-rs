@@ -1170,7 +1170,7 @@ mod owned {
             Self(unsafe { TaskRef::from_raw_nonnull(id) })
         }
 
-        /// Consume and "leak" `self`, returning a reference `TaskRef<'static>`.
+        /// Consume and "leak" `self`, returning a reference `TaskRef<'a>`.
         #[inline]
         pub const fn leak<'a>(self) -> TaskRef<'a> {
             let out = self.0;
