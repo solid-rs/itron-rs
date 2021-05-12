@@ -271,6 +271,25 @@ impl ErrorKind for DelayError {
     }
 }
 
+define_error_kind! {
+    /// Error type for [`exit`].
+    pub enum ExitError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+    }
+}
+
+impl ErrorKind for ExitError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            // E_SYS is considered critial, hence excluded
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
 /// Task priority value.
 pub type Priority = abi::PRI;
 
@@ -314,6 +333,28 @@ pub fn delay(dur: Duration) -> Result<(), Error<DelayError>> {
             Error::err_if_negative(abi::dly_tsk(dur.as_raw()))?;
             Ok(())
         },
+        #[cfg(feature = "none")]
+        () => unimplemented!(),
+    }
+}
+
+/// `ext_tsk`: Terminate the current task.
+///
+/// This function will not return if it succeeds.
+///
+/// # Safety
+///
+/// If the task's stack is reused later, stored local variables are
+/// destroyed without running their destructors, violating the [pinning]
+/// requirements.
+///
+/// [pinning]: std::pin
+#[inline]
+#[doc(alias = "ext_tsk")]
+pub unsafe fn exit() -> Error<ExitError> {
+    match () {
+        #[cfg(not(feature = "none"))]
+        () => unsafe { Error::new_unchecked(ErrorCode::new_unchecked(abi::ext_tsk())) },
         #[cfg(feature = "none")]
         () => unimplemented!(),
     }
