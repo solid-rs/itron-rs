@@ -123,6 +123,8 @@ impl TryFrom<StdDuration> for Timeout {
 ///
 /// ```
 /// use itron::time::{timeout, Timeout};
+/// assert_eq!(Timeout::ZERO, timeout!(0));
+/// assert_eq!(Timeout::FOREVER, timeout!(infinity));
 /// assert_eq!(Timeout::from_millis(42).unwrap(), timeout!(ms: 42));
 /// ```
 ///
@@ -187,6 +189,12 @@ pub macro timeout {
     (ns: $value:expr) => {
         $crate::time::expect_valid_timeout($crate::time::Timeout::from_nanos($value))
     },
+
+    // Infinity
+    (infinity) => { $crate::time::Timeout::FOREVER },
+
+    // Zero
+    (0) => { $crate::time::Timeout::ZERO },
 }
 
 /// Panics if the specified `Option<Timeout>` is `None`. Used by `timeout!`.
