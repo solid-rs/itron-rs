@@ -2,6 +2,22 @@ use super::{bool_t, uint_t, ATR, ER, ER_UINT, EXINF, ID, PRI, RELTIM, STAT, TMO}
 
 pub type TASK = extern "C" fn(EXINF);
 
+/*
+ *  オブジェクトの状態の定義
+ */
+/// 実行状態
+pub const TTS_RUN: STAT = 0x01;
+/// 実行可能状態
+pub const TTS_RDY: STAT = 0x02;
+/// 待ち状態
+pub const TTS_WAI: STAT = 0x04;
+/// 強制待ち状態
+pub const TTS_SUS: STAT = 0x08;
+/// 二重待ち状態
+pub const TTS_WAS: STAT = 0x0c;
+/// 休止状態
+pub const TTS_DMT: STAT = 0x10;
+
 /// TOPPERS/ASP3 dynamic creation extension `T_CTSK`
 #[cfg(all(feature = "asp3", feature = "dcre"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

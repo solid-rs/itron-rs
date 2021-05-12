@@ -176,6 +176,33 @@ impl ErrorKind for DeleteError {
 }
 
 define_error_kind! {
+    /// Error type for [`TaskRef::state`].
+    pub enum StateError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        #[cfg(any())]
+        AccessDenied,
+    }
+}
+
+impl ErrorKind for StateError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            // `E_MACX` is considered critical, hence excluded
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
     /// Error type for [`TaskRef::terminate`].
     pub enum TerminateError {
         #[cfg(not(feature = "none"))]
@@ -402,6 +429,18 @@ pub type EnableTerminationError = DisableTerminationError;
 
 /// Task priority value.
 pub type Priority = abi::PRI;
+
+/// Task state returned by [`TaskRef::state`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[repr(u8)]
+pub enum State {
+    Running = abi::TTS_RUN as u8,
+    Ready = abi::TTS_RDY as u8,
+    Waiting = abi::TTS_WAI as u8,
+    Suspended = abi::TTS_SUS as u8,
+    WaitingSuspended = abi::TTS_WAS as u8,
+    Dormant = abi::TTS_DMT as u8,
+}
 
 /// `slp_tsk`: Put the current task to sleep.
 #[inline]
@@ -639,7 +678,22 @@ impl TaskRef<'_> {
         }
     }
 
-    // TODO: get_tst
+    /// `get_tst`: Get the task's state.
+    #[inline]
+    #[doc(alias = "get_tst")]
+    pub fn state(self) -> Result<State, Error<StateError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                let mut pri = MaybeUninit::uninit();
+                Error::err_if_negative(abi::get_tst(self.as_raw(), pri.as_mut_ptr()))?;
+                Ok(core::mem::transmute::<u8, State>(pri.assume_init() as u8))
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
     // TODO: ref_tsk
 }
 
