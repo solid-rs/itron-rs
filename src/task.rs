@@ -244,7 +244,7 @@ define_error_kind! {
         ///
         #[cfg(not(feature = "none"))]
         BadState,
-        /// Bad state.
+        /// Bad parameter.
         ///
         ///  - The current task cannot be terminated,
         ///
