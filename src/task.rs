@@ -825,7 +825,7 @@ impl Info {
 
 /// `slp_tsk`: Put the current task to sleep.
 ///
-/// The [`TaskRef::wake`] method and this function are semantically similar to
+/// The [`TaskRef::wake`] method and this function are semantically analogous to
 /// `std::thread::Thread::unpark` and `std::thread::park`, respectively.
 #[inline]
 #[doc(alias = "slp_tsk")]
@@ -1121,7 +1121,7 @@ impl TaskRef<'_> {
 impl TaskRef<'_> {
     /// `wup_tsk`: Pend a wake up request for the task.
     ///
-    /// This method and the [`sleep`] function are semantically similar to
+    /// This method and the [`sleep`] function are semantically analogous to
     /// `std::thread::Thread::unpark` and `std::thread::park`, respectively.
     #[inline]
     #[doc(alias = "wup_tsk")]
