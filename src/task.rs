@@ -638,7 +638,6 @@ impl ErrorKind for ExitError {
 
 define_error_kind! {
     /// Error type for [`disable_termination`].
-    #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
     pub enum DisableTerminationError {
         #[cfg(not(feature = "none"))]
         BadContext,
@@ -669,7 +668,6 @@ pub struct BadContextError(());
 
 define_error_kind! {
     /// Error type for [`current_id`].
-    #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
     pub enum CurrentIdError {
         /// The CPU lock state is active.
         #[cfg(not(feature = "none"))]
