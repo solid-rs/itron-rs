@@ -236,7 +236,8 @@ define_error_kind! {
         BadContext,
         #[cfg(not(feature = "none"))]
         BadId,
-        #[cfg(any())]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(any())]
         AccessDenied,
@@ -258,7 +259,7 @@ impl ErrorKind for WakeError {
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
-            #[cfg(any())]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
@@ -278,7 +279,8 @@ define_error_kind! {
         BadContext,
         #[cfg(not(feature = "none"))]
         BadId,
-        #[cfg(any())]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(any())]
         AccessDenied,
@@ -298,7 +300,7 @@ impl ErrorKind for CancelWakeAllError {
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
-            #[cfg(any())]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
@@ -316,7 +318,8 @@ define_error_kind! {
         BadContext,
         #[cfg(not(feature = "none"))]
         BadId,
-        #[cfg(any())]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(any())]
         AccessDenied,
@@ -336,7 +339,7 @@ impl ErrorKind for ReleaseWaitError {
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
-            #[cfg(any())]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
@@ -354,7 +357,8 @@ define_error_kind! {
         BadContext,
         #[cfg(not(feature = "none"))]
         BadId,
-        #[cfg(any())]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(any())]
         AccessDenied,
@@ -378,7 +382,7 @@ impl ErrorKind for SuspendError {
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
-            #[cfg(any())]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
@@ -398,7 +402,8 @@ define_error_kind! {
         BadContext,
         #[cfg(not(feature = "none"))]
         BadId,
-        #[cfg(any())]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(any())]
         AccessDenied,
@@ -418,7 +423,7 @@ impl ErrorKind for ResumeError {
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
-            #[cfg(any())]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
@@ -518,7 +523,8 @@ define_error_kind! {
     pub enum SleepError {
         #[cfg(not(feature = "none"))]
         BadContext,
-        #[cfg(not(feature = "none"))]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(not(feature = "none"))]
         Released,
@@ -532,7 +538,7 @@ impl ErrorKind for SleepError {
         match code.get() {
             #[cfg(not(feature = "none"))]
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
-            #[cfg(not(feature = "none"))]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_RLWAI => Some(Self::Released(Kind::from_error_code(code))),
@@ -548,7 +554,8 @@ define_error_kind! {
     pub enum SleepTimeoutError {
         #[cfg(not(feature = "none"))]
         BadContext,
-        #[cfg(not(feature = "none"))]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(not(feature = "none"))]
         Timeout,
@@ -565,7 +572,7 @@ impl ErrorKind for SleepTimeoutError {
             // E_PAR is considered critial, hence excluded
             #[cfg(not(feature = "none"))]
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
-            #[cfg(not(feature = "none"))]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_TMOUT => Some(Self::Timeout(Kind::from_error_code(code))),
@@ -583,7 +590,8 @@ define_error_kind! {
     pub enum DelayError {
         #[cfg(not(feature = "none"))]
         BadContext,
-        #[cfg(not(feature = "none"))]
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
         NotSupported,
         #[cfg(not(feature = "none"))]
         Released,
@@ -598,7 +606,7 @@ impl ErrorKind for DelayError {
             // E_PAR is considered critial, hence excluded
             #[cfg(not(feature = "none"))]
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
-            #[cfg(not(feature = "none"))]
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_RLWAI => Some(Self::Released(Kind::from_error_code(code))),
