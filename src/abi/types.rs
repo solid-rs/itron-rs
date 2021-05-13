@@ -5,10 +5,10 @@
 //! efforts.
 
 /// 自然なサイズの符号付き整数
-pub type int_t = isize; // TODO
+pub type int_t = i32;
 
 /// 自然なサイズの符号無し整数
-pub type uint_t = usize; // TODO
+pub type uint_t = u32;
 
 pub type bool_t = int_t;
 
