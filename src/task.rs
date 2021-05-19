@@ -829,6 +829,7 @@ impl Info {
 /// `std::thread::Thread::unpark` and `std::thread::park`, respectively.
 #[inline]
 #[doc(alias = "slp_tsk")]
+#[doc(alias = "park")]
 pub fn sleep() -> Result<(), Error<SleepError>> {
     match () {
         #[cfg(not(feature = "none"))]
@@ -844,6 +845,7 @@ pub fn sleep() -> Result<(), Error<SleepError>> {
 /// `dly_tsk`: Put the current task to sleep with timeout.
 #[inline]
 #[doc(alias = "tslp_tsk")]
+#[doc(alias = "park_timeout")]
 pub fn sleep_timeout(tmo: Timeout) -> Result<(), Error<SleepTimeoutError>> {
     match () {
         #[cfg(not(feature = "none"))]
@@ -1125,6 +1127,7 @@ impl TaskRef<'_> {
     /// `std::thread::Thread::unpark` and `std::thread::park`, respectively.
     #[inline]
     #[doc(alias = "wup_tsk")]
+    #[doc(alias = "unpark")]
     pub fn wake(self) -> Result<(), Error<WakeError>> {
         match () {
             #[cfg(not(feature = "none"))]
