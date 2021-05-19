@@ -686,7 +686,7 @@ impl ErrorKind for CurrentIdError {
 }
 
 define_error_kind! {
-    /// Error type for [`TaskRef::raise_termination`].
+    /// Error type for [`Task::build`].
     #[cfg(feature = "dcre")]
     #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
     pub enum BuildError {
