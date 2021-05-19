@@ -21,7 +21,7 @@
 //!
 //!  - `E_PAR` caused by invalid timeout values.
 //!
-use core::{fmt, marker::PhantomData, num::NonZeroIsize};
+use core::{fmt, marker::PhantomData};
 
 #[allow(unused_imports)]
 use crate::abi;
@@ -67,7 +67,7 @@ impl<Kind: ErrorKind> Error<Kind> {
     ///
     /// See [`Self::new_unchecked`].
     #[inline]
-    pub(crate) unsafe fn err_if_negative(code: isize) -> Result<isize, Self> {
+    pub(crate) unsafe fn err_if_negative(code: abi::ER) -> Result<abi::ER, Self> {
         if let Some(e) = ErrorCode::new(code) {
             // Safety: Upheld by the caller
             Err(unsafe { Self::new_unchecked(e) })
@@ -101,18 +101,18 @@ impl<Kind> fmt::Debug for Error<Kind> {
 
 /// Raw error code.
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub struct ErrorCode(NonZeroIsize);
+pub struct ErrorCode(abi::NonZeroER);
 
 impl ErrorCode {
     /// Construct an `ErrorCode`.
     ///
     /// Returns `None` if the specified value is not negative.
     #[inline]
-    pub const fn new(code: isize) -> Option<Self> {
+    pub const fn new(code: abi::ER) -> Option<Self> {
         if code >= 0 {
             None
         } else {
-            if let Some(x) = NonZeroIsize::new(code) {
+            if let Some(x) = abi::NonZeroER::new(code) {
                 Some(Self(x))
             } else {
                 None
@@ -128,13 +128,13 @@ impl ErrorCode {
     /// If `code` is not negative, this function causes an undefined
     /// behavior.
     #[inline]
-    pub const unsafe fn new_unchecked(code: isize) -> Self {
-        Self(unsafe { NonZeroIsize::new_unchecked(code) })
+    pub const unsafe fn new_unchecked(code: abi::ER) -> Self {
+        Self(unsafe { abi::NonZeroER::new_unchecked(code) })
     }
 
     /// Get the numerical value.
     #[inline]
-    pub const fn get(self) -> isize {
+    pub const fn get(self) -> abi::ER {
         self.0.get()
     }
 }

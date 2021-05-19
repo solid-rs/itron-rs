@@ -21,6 +21,9 @@ pub type FN = int_t;
 /// エラーコード
 pub type ER = int_t;
 
+// Non-zero version of [`ER`]
+pub type NonZeroER = core::num::NonZeroI32;
+
 /// オブジェクトのID番号
 pub type ID = int_t;
 
