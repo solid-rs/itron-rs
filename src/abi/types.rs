@@ -99,6 +99,9 @@ pub type INHNO = uint_t;
 /// CPU例外ハンドラ番号
 pub type EXCNO = uint_t;
 
+/// 固定長メモリプール領域を確保するための型
+pub type MPF_T = isize;
+
 /*
  *  オブジェクト属性
  */

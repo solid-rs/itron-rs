@@ -1,4 +1,4 @@
-use super::{uint_t, ER, ID, TMO};
+use super::{uint_t, ATR, ER, ER_ID, ID, MPF_T, TMO};
 
 #[cfg(feature = "asp3")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -10,6 +10,22 @@ pub struct T_RMPF {
     pub fblkcnt: uint_t,
 }
 
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CMPF {
+    /// 固定長メモリプール属性
+    mpfatr: ATR,
+    /// 獲得できる固定長メモリブロックの数
+    blkcnt: uint_t,
+    /// 固定長メモリブロックのサイズ
+    blksz: uint_t,
+    /// 固定長メモリプール領域の先頭番地
+    mpf: *mut MPF_T,
+    /// 固定長メモリプール管理領域の先頭番地
+    mpfmb: *mut u8,
+}
+
 /// メモリプール管理機能
 #[cfg(feature = "asp3")]
 extern "C" {
@@ -19,4 +35,11 @@ extern "C" {
     pub fn rel_mpf(mpfid: ID, blk: *mut u8) -> ER;
     pub fn ini_mpf(mpfid: ID) -> ER;
     pub fn ref_mpf(mpfid: ID, pk_rmpf: *mut T_RMPF) -> ER;
+}
+
+/// メモリプール管理機能
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+extern "C" {
+    pub fn acre_mpf(pk_cmpf: *const T_CMPF) -> ER_ID;
+    pub fn del_mpf(mpfid: ID) -> ER;
 }
