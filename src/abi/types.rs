@@ -12,7 +12,9 @@ pub type uint_t = u32;
 
 pub type bool_t = int_t;
 
+/// Represents a truthy value.
 pub const TRUE: bool_t = 1;
+/// Represents a falsy value.
 pub const FALSE: bool_t = 0;
 
 /// 機能コード
