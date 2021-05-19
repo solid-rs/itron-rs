@@ -27,4 +27,4 @@ rstr_task = []
 
 
 [package.metadata.docs.rs]
-rustdoc-args = ["--cfg", "feature=\"doc_cfg\""]
+features = ["doc_cfg"]
