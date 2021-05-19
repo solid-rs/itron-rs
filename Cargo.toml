@@ -27,4 +27,4 @@ rstr_task = []
 
 
 [package.metadata.docs.rs]
-features = ["doc_cfg"]
+features = ["doc_cfg", "nightly"]
