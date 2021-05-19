@@ -1,7 +1,7 @@
 //! C API
 //!
-//! Note: `doc(cfg(...))` is not used in this module as it's not very
-//! useful here.
+//! Note: `doc(cfg(...))` is not used in this module as different kernels might
+//! provide different items with conflicting names.
 #![allow(non_camel_case_types)]
 #![allow(unused_imports)]
 mod error;
