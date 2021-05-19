@@ -1125,6 +1125,8 @@ impl TaskRef<'_> {
     ///
     /// This method and the [`sleep`] function are semantically analogous to
     /// `std::thread::Thread::unpark` and `std::thread::park`, respectively.
+    /// However, unlike `unpark`, **this method will return
+    /// `Err(WakeError::QueueOverflow)` if the token is already present.**
     #[inline]
     #[doc(alias = "wup_tsk")]
     #[doc(alias = "unpark")]
