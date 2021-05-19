@@ -1,4 +1,4 @@
-use super::{uint_t, ER, FLGPTN, ID, MODE, PRI, RELTIM, TMO};
+use super::{uint_t, ATR, ER, ER_ID, FLGPTN, ID, MODE, PRI, RELTIM, TMO};
 
 #[cfg(feature = "asp3")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -54,6 +54,64 @@ pub struct T_RMTX {
     pub wtskid: ID,
 }
 
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CSEM {
+    /// セマフォ属性
+    sematr: ATR,
+    /// セマフォの初期資源数
+    isemcnt: uint_t,
+    /// セマフォの最大資源数
+    maxsem: uint_t,
+}
+
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CFLG {
+    /// イベントフラグ属性
+    flgatr: ATR,
+    /// イベントフラグの初期ビットパターン
+    iflgptn: FLGPTN,
+}
+
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CDTQ {
+    /// データキュー属性
+    dtqatr: ATR,
+    /// データキュー管理領域に格納できるデータ数
+    dtqcnt: uint_t,
+    /// データキュー管理領域の先頭番地
+    dtqmb: *mut u8,
+}
+
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CPDQ {
+    /// 優先度データキュー属性
+    pdqatr: ATR,
+    /// 優先度データキュー管理領域に格納できるデータ数
+    pdqcnt: uint_t,
+    /// 優先度データキューに送信できるデータ優先度の最大値
+    maxdpri: PRI,
+    /// 優先度データキュー管理領域の先頭番地
+    pdqmb: *mut u8,
+}
+
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CMTX {
+    /// ミューテックス属性
+    mtxatr: ATR,
+    /// ミューテックスの上限優先度
+    ceilpri: PRI,
+}
+
 /// 同期・通信機能
 #[cfg(feature = "asp3")]
 extern "C" {
@@ -103,4 +161,19 @@ extern "C" {
     pub fn unl_mtx(mtxid: ID) -> ER;
     pub fn ini_mtx(mtxid: ID) -> ER;
     pub fn ref_mtx(mtxid: ID, pk_rmtx: *mut T_RMTX) -> ER;
+}
+
+/// 同期・通信機能
+#[cfg(all(feature = "asp3", feature = "dcre"))]
+extern "C" {
+    pub fn acre_sem(pk_csem: *const T_CSEM) -> ER_ID;
+    pub fn acre_flg(pk_cflg: *const T_CFLG) -> ER_ID;
+    pub fn acre_dtq(pk_cdtq: *const T_CDTQ) -> ER_ID;
+    pub fn acre_pdq(pk_cpdq: *const T_CPDQ) -> ER_ID;
+    pub fn acre_mtx(pk_cmtx: *const T_CMTX) -> ER_ID;
+    pub fn del_sem(semid: ID) -> ER;
+    pub fn del_flg(flgid: ID) -> ER;
+    pub fn del_dtq(dtqid: ID) -> ER;
+    pub fn del_pdq(pdqid: ID) -> ER;
+    pub fn del_mtx(mtxid: ID) -> ER;
 }
