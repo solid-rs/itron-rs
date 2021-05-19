@@ -25,7 +25,7 @@ pub type ER = int_t;
 pub type ID = int_t;
 
 /// Non-null version of [`ID`]
-pub type NonNullID = core::num::NonZeroIsize;
+pub type NonNullID = core::num::NonZeroI32;
 
 /// オブジェクトの属性
 pub type ATR = uint_t;
