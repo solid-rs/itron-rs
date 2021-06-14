@@ -21,6 +21,7 @@ In addition to the kernel selection features described above, this package
 supports the following Cargo features:
 
  - `nightly` enables nightly-only features. Currently, this feature enables the use of [`doc_cfg`] and exposes `itron::time::timeout!`.
+ - `unstable` enables unstable (in terms of API stability), experimental features that may be changed or removed in the future.
 
 [`doc_cfg`]: https://doc.rust-lang.org/unstable-book/language-features/doc-cfg.html
 

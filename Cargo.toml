@@ -8,6 +8,7 @@ publish = false
 default = []
 nightly = ["doc_cfg"]
 doc_cfg = []
+unstable = []
 
 # --------------------------------------------------------
 # Kernel selection
@@ -27,4 +28,4 @@ rstr_task = []
 
 
 [package.metadata.docs.rs]
-features = ["doc_cfg", "nightly"]
+features = ["doc_cfg", "nightly", "unstable"]
