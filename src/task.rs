@@ -1340,6 +1340,26 @@ mod owned {
 
     impl Task {
         /// `acre_tsk`: Create a builder for `Task`.
+        ///
+        /// # Example
+        ///
+        /// ```rust,no_run
+        /// use itron::task::Task;
+        /// let captured_variable = 42u16;
+        /// let task = Task::build()
+        ///     .start(move || { let _ = captured_variable; })
+        ///     .stack(4096)
+        ///     .initial_priority(4)
+        ///     .finish()
+        ///     .expect("failed to create a task");
+        ///
+        /// task.as_ref().activate().expect("failed to activate the created task");
+        ///
+        /// // The created task might be still active, so if we just let `task`
+        /// // go out of scope, its destructor will panic. `Task::leak` consumes
+        /// // `Task` and prevents the destructor from running.
+        /// task.leak();
+        /// ```
         #[inline]
         #[doc(alias = "acre_tsk")]
         pub fn build() -> Builder<
