@@ -1,6 +1,6 @@
 Rust interface to interact with operating systems based on μITRON or its derivative.
 
-# Kernel Selection
+## Kernel Selection
 
 This crate exposes a Cargo feature for each supported RTOS kernel
 implementation. The following ones are supported:
@@ -11,11 +11,11 @@ implementation. The following ones are supported:
 
 It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct).
 
-# Target Selection
+## Target Selection
 
 This crate does not export target-specific definitions yet.
 
-# Cargo Features
+## Cargo Features
 
 In addition to the kernel selection features described above, this package
 supports the following Cargo features:
@@ -25,9 +25,9 @@ supports the following Cargo features:
 
 [`doc_cfg`]: https://doc.rust-lang.org/unstable-book/language-features/doc-cfg.html
 
-# API Design
+## API Design
 
-## Object ID Wrappers
+### Object ID Wrappers
 
 Kernel object IDs are encapsulated in opaque wrappers, which can be constructed either by calling the creation methods or by converting from raw object IDs. Although interacting with arbitrary kernel objects do not exhibit memory unsafety by itself, conversion from raw object IDs has to go through `unsafe` calls because the created wrappers could be used to interfere with other code's usage of such objects, breaking its assumptions, possibly violating memory safety. Deleting unowned objects is `unsafe` as well because such objects could be still in use by their actual owners, and the actual owners would touch supposedly-unrelated objects if the IDs were reused.
 
@@ -35,6 +35,6 @@ It's allowed to [get] an object ID wrapper for the current task. However, the wr
 
 [get]: crate::task::current
 
-## Kernel Assumed to be Operational
+### Kernel Assumed to be Operational
 
 **It's assumed that this crate's functions are called while the kernel is operational** (i.e., `sns_ker` returns `FALSE`). It's up to application programmers to make sure they are not called inside initialization or termination routines.
