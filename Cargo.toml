@@ -28,4 +28,7 @@ rstr_task = []
 
 
 [package.metadata.docs.rs]
-features = ["doc_cfg", "nightly", "unstable"]
+# arbitrarily choose ASP3.
+features = ["doc_cfg", "nightly", "unstable", "asp3", "dcre"]
+# only build the default target
+targets = []
