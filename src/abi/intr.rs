@@ -1,5 +1,11 @@
 use super::{bool_t, ER, ER_BOOL, INTNO, PRI};
 
+/*
+ *  その他の定数の定義
+ */
+/// 割込み優先度マスク全解除
+pub const TIPM_ENAALL: PRI = 0;
+
 /// 割込み管理機能
 #[cfg(feature = "asp3")]
 extern "C" {

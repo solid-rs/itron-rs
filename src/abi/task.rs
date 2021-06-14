@@ -26,6 +26,19 @@ pub const TTS_WAS: STAT = 0x0c;
 /// 休止状態
 pub const TTS_DMT: STAT = 0x10;
 
+/*
+ *  その他の定数の定義
+ */
+/// 自タスク指定
+pub const TSK_SELF: ID = 0;
+/// 該当するタスクがない
+pub const TSK_NONE: ID = 0;
+
+/// 自タスクのベース優先度
+pub const TPRI_SELF: PRI = 0;
+/// タスクの起動時優先度
+pub const TPRI_INI: PRI = 0;
+
 /// TOPPERS/ASP3 dynamic creation extension `T_CTSK`
 #[cfg(all(feature = "asp3", feature = "dcre"))]
 #[derive(Debug, Clone, Copy)]
