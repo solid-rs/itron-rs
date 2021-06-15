@@ -1,8 +1,14 @@
 [package]
 name = "itron"
-version = "0.0.0"
+version = "0.1.0"
+authors = [
+    "Tomoaki Kawada",
+]
 edition = "2018"
-publish = false
+readme = "src/lib.md"
+description = "Interface to operating systems based on μITRON or its derivative."
+categories = ["embedded", "no-std", "external-ffi-bindings", "os"]
+repository = "https://github.com/kawadakk/itron-rs"
 
 [features]
 default = []
