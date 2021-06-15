@@ -18,5 +18,6 @@ fn main() {
         // features with `Cargo.toml`)
         println!("cargo:rustc-cfg=feature=\"none\"");
         println!("cargo:rustc-cfg=feature=\"dcre\"");
+        println!("cargo:rustc-cfg=feature=\"rstr_task\"");
     }
 }
