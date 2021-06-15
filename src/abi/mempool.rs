@@ -15,15 +15,15 @@ pub struct T_RMPF {
 #[repr(C)]
 pub struct T_CMPF {
     /// 固定長メモリプール属性
-    mpfatr: ATR,
+    pub mpfatr: ATR,
     /// 獲得できる固定長メモリブロックの数
-    blkcnt: uint_t,
+    pub blkcnt: uint_t,
     /// 固定長メモリブロックのサイズ
-    blksz: uint_t,
+    pub blksz: uint_t,
     /// 固定長メモリプール領域の先頭番地
-    mpf: *mut MPF_T,
+    pub mpf: *mut MPF_T,
     /// 固定長メモリプール管理領域の先頭番地
-    mpfmb: *mut u8,
+    pub mpfmb: *mut u8,
 }
 
 /// メモリプール管理機能

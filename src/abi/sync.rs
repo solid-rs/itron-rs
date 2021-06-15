@@ -59,11 +59,11 @@ pub struct T_RMTX {
 #[repr(C)]
 pub struct T_CSEM {
     /// セマフォ属性
-    sematr: ATR,
+    pub sematr: ATR,
     /// セマフォの初期資源数
-    isemcnt: uint_t,
+    pub isemcnt: uint_t,
     /// セマフォの最大資源数
-    maxsem: uint_t,
+    pub maxsem: uint_t,
 }
 
 #[cfg(all(feature = "asp3", feature = "dcre"))]
@@ -71,9 +71,9 @@ pub struct T_CSEM {
 #[repr(C)]
 pub struct T_CFLG {
     /// イベントフラグ属性
-    flgatr: ATR,
+    pub flgatr: ATR,
     /// イベントフラグの初期ビットパターン
-    iflgptn: FLGPTN,
+    pub iflgptn: FLGPTN,
 }
 
 #[cfg(all(feature = "asp3", feature = "dcre"))]
@@ -81,11 +81,11 @@ pub struct T_CFLG {
 #[repr(C)]
 pub struct T_CDTQ {
     /// データキュー属性
-    dtqatr: ATR,
+    pub dtqatr: ATR,
     /// データキュー管理領域に格納できるデータ数
-    dtqcnt: uint_t,
+    pub dtqcnt: uint_t,
     /// データキュー管理領域の先頭番地
-    dtqmb: *mut u8,
+    pub dtqmb: *mut u8,
 }
 
 #[cfg(all(feature = "asp3", feature = "dcre"))]
@@ -93,13 +93,13 @@ pub struct T_CDTQ {
 #[repr(C)]
 pub struct T_CPDQ {
     /// 優先度データキュー属性
-    pdqatr: ATR,
+    pub pdqatr: ATR,
     /// 優先度データキュー管理領域に格納できるデータ数
-    pdqcnt: uint_t,
+    pub pdqcnt: uint_t,
     /// 優先度データキューに送信できるデータ優先度の最大値
-    maxdpri: PRI,
+    pub maxdpri: PRI,
     /// 優先度データキュー管理領域の先頭番地
-    pdqmb: *mut u8,
+    pub pdqmb: *mut u8,
 }
 
 #[cfg(all(feature = "asp3", feature = "dcre"))]
@@ -107,9 +107,9 @@ pub struct T_CPDQ {
 #[repr(C)]
 pub struct T_CMTX {
     /// ミューテックス属性
-    mtxatr: ATR,
+    pub mtxatr: ATR,
     /// ミューテックスの上限優先度
-    ceilpri: PRI,
+    pub ceilpri: PRI,
 }
 
 /// 同期・通信機能
