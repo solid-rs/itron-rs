@@ -15,6 +15,8 @@ implementation. The following ones are supported:
 
 It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct).
 
+Items are `cfg`-gated according to the selected kernel's supported feature set so that the uses of non-existent features are detected at compile time.
+
 ## Cargo Features
 
 In addition to the kernel selection features described above, this package
