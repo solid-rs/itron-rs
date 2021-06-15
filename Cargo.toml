@@ -19,11 +19,16 @@ unstable = []
 
 # --------------------------------------------------------
 # Kernel selection
+#  - Be sure to synchronize this with `build.rs`.
+#  - Be sure to synchronize this with the "list of enabled features"
+#    in `crate::abi`.
 none = ["dcre", "rstr_task"]
 asp3 = []
 
 # --------------------------------------------------------
 # Kernel customization
+#  - Be sure to synchronize this with the "list of enabled features"
+#    in `crate::abi`.
 
 # Dynamic object creation. Enables owned wrapped types.
 dcre = []
