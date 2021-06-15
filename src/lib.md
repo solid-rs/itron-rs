@@ -11,10 +11,6 @@ implementation. The following ones are supported:
 
 It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct).
 
-## Target Selection
-
-This crate does not export target-specific definitions yet.
-
 ## Cargo Features
 
 In addition to the kernel selection features described above, this package
