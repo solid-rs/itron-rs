@@ -7,7 +7,7 @@ authors = [
 license = "MIT OR Apache-2.0"
 edition = "2018"
 readme = "src/lib.md"
-description = "Interface to operating systems based on μITRON or its derivative."
+description = "Interface to operating systems based on μITRON and its derivatives."
 categories = ["embedded", "no-std", "external-ffi-bindings", "os"]
 repository = "https://github.com/kawadakk/itron-rs"
 
