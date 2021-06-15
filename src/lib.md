@@ -27,6 +27,8 @@ supports the following Cargo features:
 
 ## API Design
 
+*This section is relevant only when the `unstable` feature is enabled.*
+
 ### Object ID Wrappers
 
 Kernel object IDs are encapsulated in opaque wrappers, which can be constructed either by calling the creation methods or by converting from raw object IDs. Although interacting with arbitrary kernel objects do not exhibit memory unsafety by itself, conversion from raw object IDs has to go through `unsafe` calls because the created wrappers could be used to interfere with other code's usage of such objects, breaking its assumptions, possibly violating memory safety. Deleting unowned objects is `unsafe` as well because such objects could be still in use by their actual owners, and the actual owners would touch supposedly-unrelated objects if the IDs were reused.
