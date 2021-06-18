@@ -12,6 +12,7 @@
 #![cfg_attr(feature = "dcre", doc = ", `dcre`")]
 #![cfg_attr(feature = "rstr_task", doc = ", `rstr_task`")]
 #![cfg_attr(feature = "messagebuf", doc = ", `messagebuf`")]
+#![cfg_attr(feature = "ovrhdr", doc = ", `ovrhdr`")]
 //! </i>
 #![allow(non_camel_case_types)]
 #![allow(unused_imports)]

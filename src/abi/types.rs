@@ -59,6 +59,10 @@ pub type SYSTIM = u64;
 /// 高分解能タイマのカウント値
 pub type HRTCNT = u64;
 
+#[cfg(all(feature = "asp3", feature = "ovrhdr"))]
+/// プロセッサ時間［NGKI0573］
+pub type PRCTIM = u32;
+
 /// プログラムの起動番地
 pub type FP = unsafe fn();
 

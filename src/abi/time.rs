@@ -20,6 +20,16 @@ pub struct T_RALM {
     pub lefttim: RELTIM,
 }
 
+#[cfg(all(feature = "asp3", feature = "ovrhdr"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_ROVR {
+    /// オーバランハンドラの動作状態 */
+    pub ovrstat: STAT,
+    /// 残りプロセッサ時間 */
+    pub leftotm: super::PRCTIM,
+}
+
 /// 時間管理機能
 #[cfg(feature = "asp3")]
 extern "C" {
@@ -35,4 +45,12 @@ extern "C" {
     pub fn sta_alm(almid: ID, almtim: RELTIM) -> ER;
     pub fn stp_alm(almid: ID) -> ER;
     pub fn ref_alm(almid: ID, pk_ralm: *mut T_RALM) -> ER;
+}
+
+/// 時間管理機能
+#[cfg(all(feature = "asp3", feature = "ovrhdr"))]
+extern "C" {
+    pub fn sta_ovr(tskid: ID, ovrtim: super::PRCTIM) -> ER;
+    pub fn stp_ovr(tskid: ID) -> ER;
+    pub fn ref_ovr(tskid: ID, pk_rovr: *mut T_ROVR) -> ER;
 }

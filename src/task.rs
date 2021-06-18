@@ -7,6 +7,10 @@ use crate::{
     time::{Duration, Timeout},
 };
 
+// TODO: sta_ovr
+// TODO: stp_ovr
+// TODO: ref_ovr
+
 define_error_kind! {
     /// Error type for [`TaskRef::activate`].
     pub enum ActivateError {

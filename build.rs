@@ -20,5 +20,6 @@ fn main() {
         println!("cargo:rustc-cfg=feature=\"dcre\"");
         println!("cargo:rustc-cfg=feature=\"rstr_task\"");
         println!("cargo:rustc-cfg=feature=\"messagebuf\"");
+        println!("cargo:rustc-cfg=feature=\"ovrhdr\"");
     }
 }
