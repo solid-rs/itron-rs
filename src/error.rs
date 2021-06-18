@@ -111,12 +111,10 @@ impl ErrorCode {
     pub const fn new(code: abi::ER) -> Option<Self> {
         if code >= 0 {
             None
+        } else if let Some(x) = abi::NonZeroER::new(code) {
+            Some(Self(x))
         } else {
-            if let Some(x) = abi::NonZeroER::new(code) {
-                Some(Self(x))
-            } else {
-                None
-            }
+            None
         }
     }
 

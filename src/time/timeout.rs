@@ -64,10 +64,10 @@ impl Timeout {
     /// Returns `None` if the specified duration is not representable.
     #[inline]
     pub const fn from_secs(secs: u64) -> Option<Self> {
-        if secs > u64::MAX / 1000_000 {
+        if secs > u64::MAX / 1_000_000 {
             None
         } else {
-            Self::from_micros(secs * 1000_000)
+            Self::from_micros(secs * 1_000_000)
         }
     }
 
@@ -76,10 +76,10 @@ impl Timeout {
     /// Returns `None` if the specified duration is not representable.
     #[inline]
     pub const fn from_millis(millis: u64) -> Option<Self> {
-        if millis > u64::MAX / 1000 {
+        if millis > u64::MAX / 1_000 {
             None
         } else {
-            Self::from_micros(millis * 1000)
+            Self::from_micros(millis * 1_000)
         }
     }
 
@@ -106,7 +106,9 @@ impl Timeout {
     #[inline]
     pub fn from_nanos(nanos: u128) -> Option<Self> {
         // TODO: make it `const fn`
-        u64::try_from(nanos / 1000).ok().and_then(Self::from_micros)
+        u64::try_from(nanos / 1_000)
+            .ok()
+            .and_then(Self::from_micros)
     }
 }
 
@@ -231,6 +233,7 @@ pub const fn expect_valid_timeout(x: Option<Timeout>) -> Timeout {
         let zero = 0u32;
         #[allow(unconditional_panic)]
         let __the_specified_timeout_is_invalid_or_not_representable__ = 1 / zero;
+        #[allow(clippy::empty_loop)]
         loop {}
     }
 }

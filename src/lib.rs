@@ -3,6 +3,7 @@
 #![cfg_attr(feature = "nightly", feature(decl_macro))]
 #![doc = include_str!("lib.md")]
 #![deny(unsafe_op_in_unsafe_fn)]
+#![allow(clippy::match_single_binding)] // the `cfg` matching pattern
 
 #[macro_use]
 #[cfg(feature = "unstable")]

@@ -69,6 +69,7 @@ impl<T: Fn() + Copy + 'static> IntoClosure for T {
                 #[allow(unconditional_panic)]
                 #[allow(non_snake_case)]
                 let __T_is_too_large_to_fit_in_EXINF__ = 1 / zero;
+                #[allow(clippy::empty_loop)]
                 loop {}
             };
         }

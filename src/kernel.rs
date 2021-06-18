@@ -1,7 +1,9 @@
 //! Miscellaneous functions that are not associated to specific kernel objects.
+#[cfg(any())]
+use crate::error::Kind;
 use crate::{
     abi,
-    error::{Error, ErrorCode, ErrorKind, Kind},
+    error::{Error, ErrorCode, ErrorKind},
 };
 
 define_error_kind! {
