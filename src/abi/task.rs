@@ -26,6 +26,27 @@ pub const TTS_WAS: STAT = 0x0c;
 /// 休止状態
 pub const TTS_DMT: STAT = 0x10;
 
+/// 起床待ち
+pub const TTW_SLP: STAT = 0x0001;
+/// 時間経過待ち
+pub const TTW_DLY: STAT = 0x0002;
+/// セマフォの資源獲得待ち
+pub const TTW_SEM: STAT = 0x0004;
+/// イベントフラグ待ち
+pub const TTW_FLG: STAT = 0x0008;
+/// データキューへの送信待ち
+pub const TTW_SDTQ: STAT = 0x0010;
+/// データキューからの受信待ち
+pub const TTW_RDTQ: STAT = 0x0020;
+/// 優先度データキューへの送信待ち
+pub const TTW_SPDQ: STAT = 0x0100;
+/// 優先度データキューからの受信待ち
+pub const TTW_RPDQ: STAT = 0x0200;
+/// ミューテックスのロック待ち状態
+pub const TTW_MTX: STAT = 0x0080;
+/// 固定長メモリブロックの獲得待ち
+pub const TTW_MPF: STAT = 0x2000;
+
 /*
  *  その他の定数の定義
  */

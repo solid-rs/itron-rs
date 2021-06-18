@@ -6,6 +6,19 @@ use super::{uint_t, ATR, ER, ER_ID, FLGPTN, ID, MODE, PRI, RELTIM, TMO};
 /// 待ち行列をタスクの優先度順にする
 pub const TA_TPRI: ATR = 0x01;
 
+/// 複数の待ちタスク
+pub const TA_WMUL: ATR = 0x02;
+/// イベントフラグのクリア指定
+pub const TA_CLR: ATR = 0x04;
+
+/*
+ *  サービスコールの動作モードの定義
+ */
+/// イベントフラグのOR待ち
+pub const TWF_ORW: MODE = 0x01;
+/// イベントフラグのAND待ち
+pub const TWF_ANDW: MODE = 0x02;
+
 #[cfg(feature = "asp3")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]

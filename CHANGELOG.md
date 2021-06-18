@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- **Added:** `itron::abi::TA_TPRI`
+- **Added:** `itron::abi::{TA_TPRI, TA_WMUL, TA_CLR, TWF_*, TTW_*}`
 - **Added:** `itron::semaphore::Semaphore[Ref]`
 
 ## 0.1.0 - 2021-06-15
