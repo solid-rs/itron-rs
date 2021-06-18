@@ -130,6 +130,11 @@ extern "C" {
     pub fn del_tsk(tskid: ID) -> ER;
 }
 
+#[cfg(all(feature = "asp3", feature = "subprio"))]
+extern "C" {
+    pub fn chg_spr(tskid: ID, subpri: uint_t) -> ER;
+}
+
 /// タスク付属同期機能
 #[cfg(feature = "asp3")]
 extern "C" {

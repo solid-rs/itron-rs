@@ -22,7 +22,7 @@ unstable = []
 #  - Be sure to synchronize this with `build.rs`.
 #  - Be sure to synchronize this with the "list of enabled features"
 #    in `crate::abi`.
-none = ["dcre", "rstr_task", "messagebuf", "ovrhdr"]
+none = ["dcre", "rstr_task", "messagebuf", "ovrhdr", "subprio"]
 asp3 = []
 
 # --------------------------------------------------------
@@ -42,12 +42,15 @@ messagebuf = []
 # Overrun handlers
 ovrhdr = []
 
+# Subpriorities
+subprio = []
+
 [dependencies]
 
 
 [package.metadata.docs.rs]
 # arbitrarily choose ASP3.
 features = ["doc_cfg", "nightly", "unstable", "asp3", "dcre", "messagebuf",
-    "ovrhdr"]
+    "ovrhdr", "subprio"]
 # only build the default target
 targets = []

@@ -13,6 +13,7 @@
 #![cfg_attr(feature = "rstr_task", doc = ", `rstr_task`")]
 #![cfg_attr(feature = "messagebuf", doc = ", `messagebuf`")]
 #![cfg_attr(feature = "ovrhdr", doc = ", `ovrhdr`")]
+#![cfg_attr(feature = "subprio", doc = ", `subprio`")]
 //! </i>
 #![allow(non_camel_case_types)]
 #![allow(unused_imports)]
