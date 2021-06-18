@@ -11,6 +11,9 @@ pub const TA_WMUL: ATR = 0x02;
 /// イベントフラグのクリア指定
 pub const TA_CLR: ATR = 0x04;
 
+/// 優先度上限プロトコル
+pub const TA_CEILING: ATR = 0x03;
+
 /*
  *  サービスコールの動作モードの定義
  */
