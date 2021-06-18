@@ -73,6 +73,20 @@ pub struct T_RMTX {
     pub wtskid: ID,
 }
 
+#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_RMBF {
+    /// メッセージバッファの送信待ち行列の先頭のタスクのID番号
+    pub stskid: ID,
+    /// メッセージバッファの受信待ち行列の先頭のタスクのID番号
+    pub rtskid: ID,
+    /// メッセージバッファ管理領域に格納されているメッセージの数
+    pub smbfcnt: uint_t,
+    /// メッセージバッファ管理領域中の空き領域のサイズ
+    pub fmbfsz: usize,
+}
+
 #[cfg(all(feature = "asp3", feature = "dcre"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -129,6 +143,21 @@ pub struct T_CMTX {
     pub mtxatr: ATR,
     /// ミューテックスの上限優先度
     pub ceilpri: PRI,
+}
+
+/// SOLID/ASP3 extension
+#[cfg(all(feature = "asp3", feature = "dcre", feature = "messagebuf"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CMBF {
+    /// メッセージバッファ属性
+    pub mbfatr: ATR,
+    /// メッセージの最大長
+    pub maxmsz: uint_t,
+    /// メッセージバッファ管理領域のサイズ
+    pub mbfsz: usize,
+    /// メッセージバッファ管理領域の先頭番地
+    pub mbfmb: *mut u8,
 }
 
 /// 同期・通信機能
@@ -195,4 +224,24 @@ extern "C" {
     pub fn del_dtq(dtqid: ID) -> ER;
     pub fn del_pdq(pdqid: ID) -> ER;
     pub fn del_mtx(mtxid: ID) -> ER;
+}
+
+/// 同期・通信機能
+#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+extern "C" {
+    pub fn snd_mbf(mbfid: ID, msg: *const u8, msgsz: uint_t) -> ER;
+    pub fn psnd_mbf(mbfid: ID, msg: *const u8, msgsz: uint_t) -> ER;
+    pub fn tsnd_mbf(mbfid: ID, msg: *const u8, msgsz: uint_t, tmout: TMO) -> ER;
+    pub fn rcv_mbf(mbfid: ID, msg: *mut u8) -> super::ER_UINT;
+    pub fn prcv_mbf(mbfid: ID, msg: *mut u8) -> super::ER_UINT;
+    pub fn trcv_mbf(mbfid: ID, msg: *mut u8, tmout: TMO) -> super::ER_UINT;
+    pub fn ini_mbf(mbfid: ID) -> ER;
+    pub fn ref_mbf(mbfid: ID, pk_rmbf: *mut T_RMBF) -> ER;
+}
+
+/// SOLID/ASP3 extension
+#[cfg(all(feature = "asp3", feature = "dcre", feature = "messagebuf"))]
+extern "C" {
+    pub fn acre_mbf(pk_cmbf: *const T_CMBF) -> ER_ID;
+    pub fn del_mbf(mbfid: ID) -> ER;
 }

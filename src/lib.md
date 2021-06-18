@@ -10,7 +10,7 @@ This crate exposes a Cargo feature for each supported RTOS kernel
 implementation. The following ones are supported:
 
  - `asp3`: [TOPPERS/ASP3](https://toppers.jp/asp3-kernel.html)
-     - Additional features supported: `dcre` (dynamic object creation), `rstr_task` (restricted tasks)
+     - Additional features supported: `dcre` (dynamic object creation), `rstr_task` (restricted tasks), `messagebox` (message buffers)
  - `none` (default): Stub implementation that exposes all functions but always panics
 
 It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct).

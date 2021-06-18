@@ -35,6 +35,12 @@ pub mod kernel;
 #[cfg(feature = "unstable")]
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
 pub mod memorypool;
+#[cfg(all(feature = "unstable", feature = "asp3", feature = "messagebuf"))]
+#[cfg_attr(
+    feature = "doc_cfg",
+    doc(cfg(all(feature = "unstable", feature = "asp3", feature = "messagebuf")))
+)]
+pub mod messagebuffer;
 #[cfg(feature = "unstable")]
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
 pub mod mutex;

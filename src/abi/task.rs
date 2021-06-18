@@ -42,6 +42,12 @@ pub const TTW_RDTQ: STAT = 0x0020;
 pub const TTW_SPDQ: STAT = 0x0100;
 /// 優先度データキューからの受信待ち
 pub const TTW_RPDQ: STAT = 0x0200;
+#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+/// メッセージバッファへの送信待ち
+pub const TTW_SMBF: STAT = 0x0400;
+#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+/// メッセージバッファからの受信待ち
+pub const TTW_RMBF: STAT = 0x0800;
 /// ミューテックスのロック待ち状態
 pub const TTW_MTX: STAT = 0x0080;
 /// 固定長メモリブロックの獲得待ち
