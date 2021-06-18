@@ -354,6 +354,10 @@ impl SemaphoreRef<'_> {
 /// # Management
 impl SemaphoreRef<'_> {
     /// `del_sem`: Delete the semaphore.
+    ///
+    /// # Safety
+    ///
+    /// See [Object ID Wrappers](crate#object-id-wrappers).
     #[inline]
     #[doc(alias = "del_sem")]
     #[cfg(feature = "dcre")]

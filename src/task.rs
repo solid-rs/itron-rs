@@ -1068,6 +1068,10 @@ impl TaskRef<'_> {
     }
 
     /// `del_tsk`: Delete the task.
+    ///
+    /// # Safety
+    ///
+    /// See [Object ID Wrappers](crate#object-id-wrappers).
     #[inline]
     #[doc(alias = "del_tsk")]
     #[cfg(feature = "dcre")]
