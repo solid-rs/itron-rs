@@ -10,62 +10,51 @@
 #[doc = include_str!("../CHANGELOG.md")]
 pub mod _changelog_ {}
 
-#[macro_use]
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod error;
-
 pub mod abi;
 
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod closure;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod dataqueue;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod eventflag;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod interrupt;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod kernel;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod memorypool;
-#[cfg(all(feature = "unstable", feature = "asp3", feature = "messagebuf"))]
-#[cfg_attr(
-    feature = "doc_cfg",
-    doc(cfg(all(feature = "unstable", feature = "asp3", feature = "messagebuf")))
-)]
-pub mod messagebuffer;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod mutex;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod prioritydataqueue;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod semaphore;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod task;
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod wait;
+macro_rules! unstable_module {
+    {$(
+        $( #[macro_use $($unused:tt)*] )*
+        $( #[doc = $doc:tt] )*
+        $( #[cfg( $($cfg:tt)* )] )?
+        pub mod $name:ident $semicolon_or_brace:tt
+    )*} => {$(
+        $( #[macro_use $($unused)*] )*
+        $( #[doc = $doc] )*
+        #[cfg(all(feature = "unstable", $($($cfg)*)?))]
+        #[cfg_attr(
+            feature = "doc_cfg",
+            doc(cfg(all(feature = "unstable", $($($cfg)*)?)))
+        )]
+        pub mod $name $semicolon_or_brace
+    )*};
+}
 
-/// Temporal quantification
-#[cfg(feature = "unstable")]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
-pub mod time {
-    mod duration;
-    mod systime;
-    mod timeout;
-    pub use self::{duration::*, systime::*, timeout::*};
-    // `use ::*` doesn't work with `pub macro`. This could be a bug.
-    #[cfg(feature = "nightly")]
-    pub use self::{duration::duration, timeout::timeout};
+unstable_module! {
+    #[macro_use]
+    pub mod error;
+    pub mod closure;
+    pub mod dataqueue;
+    pub mod eventflag;
+    pub mod interrupt;
+    pub mod kernel;
+    pub mod memorypool;
+    #[cfg(all(feature = "asp3", feature = "messagebuf"))]
+    pub mod messagebuffer;
+    pub mod mutex;
+    pub mod prioritydataqueue;
+    pub mod semaphore;
+    pub mod task;
+    pub mod wait;
+
+    /// Temporal quantification
+    pub mod time {
+        mod duration;
+        mod systime;
+        mod timeout;
+        pub use self::{duration::*, systime::*, timeout::*};
+        // `use ::*` doesn't work with `pub macro`. This could be a bug.
+        #[cfg(feature = "nightly")]
+        pub use self::{duration::duration, timeout::timeout};
+    }
 }
