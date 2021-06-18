@@ -9,6 +9,9 @@ pub type TASK = Option<unsafe extern "C" fn(EXINF)>;
 pub const TA_ACT: ATR = 0x01;
 /// 起動要求をキューイングしない
 pub const TA_NOACTQUE: ATR = 0x02;
+#[cfg(all(feature = "asp3", feature = "rstr_task"))]
+/// 制約タスク
+pub const TA_RSTR: ATR = 0x04;
 
 /*
  *  オブジェクトの状態の定義

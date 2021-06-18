@@ -11,6 +11,9 @@ use crate::{
 // TODO: stp_ovr
 // TODO: ref_ovr
 // TODO: chg_spr
+// TODO: TA_ACT
+// TODO: TA_NOACTQUE
+// TODO: TA_RTSK
 
 define_error_kind! {
     /// Error type for [`TaskRef::activate`].
