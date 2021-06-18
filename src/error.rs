@@ -279,9 +279,10 @@ macro_rules! define_error_kind {
         pub enum $name {
             $(
                 $( #[doc = $doc] )*
+                #[doc = ""]
                 // TODO: Replace this doc comment with `doc(cfg(...))`, which
                 //       currently does not work
-                #[doc = concat!("\n\n<i>Requires</i>: `cfg(", stringify!($($cfg)*), ")`")]
+                #[doc = concat!("<i>Requires</i>: `cfg(", stringify!($($cfg)*), ")`")]
                 #[cfg(doc)]
                 $variant(crate::error::MaybeKind),
 
