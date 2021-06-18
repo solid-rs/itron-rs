@@ -41,6 +41,9 @@ pub mod semaphore;
 #[cfg(feature = "unstable")]
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
 pub mod task;
+#[cfg(feature = "unstable")]
+#[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
+pub mod wait;
 
 /// Temporal quantification
 #[cfg(feature = "unstable")]

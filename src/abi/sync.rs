@@ -1,5 +1,11 @@
 use super::{uint_t, ATR, ER, ER_ID, FLGPTN, ID, MODE, PRI, RELTIM, TMO};
 
+/*
+ *  オブジェクト属性
+ */
+/// 待ち行列をタスクの優先度順にする
+pub const TA_TPRI: ATR = 0x01;
+
 #[cfg(feature = "asp3")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
