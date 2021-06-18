@@ -5,6 +5,11 @@
 #![deny(unsafe_op_in_unsafe_fn)]
 #![allow(clippy::match_single_binding)] // the `cfg` matching pattern
 
+/// Changelog (`CHANGELOG.md`)
+///
+#[doc = include_str!("../CHANGELOG.md")]
+pub mod _changelog_ {}
+
 #[macro_use]
 #[cfg(feature = "unstable")]
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "unstable")))]
