@@ -39,7 +39,7 @@ unstable_module! {
     pub mod interrupt;
     pub mod kernel;
     pub mod memorypool;
-    #[cfg(all(feature = "asp3", feature = "messagebuf"))]
+    #[cfg(any(all(feature = "asp3", feature = "messagebuf"), feature = "none"))]
     pub mod messagebuffer;
     pub mod mutex;
     pub mod prioritydataqueue;
