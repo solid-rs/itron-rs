@@ -1012,7 +1012,7 @@ impl TaskRef<'_> {
         self.id.get()
     }
 
-    /// Get the raw object ID as [` abi::NonNullID`].
+    /// Get the raw object ID as [`abi::NonNullID`].
     #[inline]
     pub const fn as_raw_nonnull(self) -> abi::NonNullID {
         self.id
@@ -1313,7 +1313,7 @@ impl Current {
         self.inner.as_raw()
     }
 
-    /// Get the raw object ID as [` abi::NonNullID`].
+    /// Get the raw object ID as [`abi::NonNullID`].
     #[inline]
     pub const fn as_raw_nonnull(&self) -> abi::NonNullID {
         self.inner.as_raw_nonnull()
@@ -1524,7 +1524,7 @@ mod owned {
             self.0.as_raw()
         }
 
-        /// Get the raw object ID as [` abi::NonNullID`].
+        /// Get the raw object ID as [`abi::NonNullID`].
         #[inline]
         pub const fn as_raw_nonnull(&self) -> abi::NonNullID {
             self.0.as_raw_nonnull()
