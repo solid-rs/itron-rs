@@ -561,6 +561,34 @@ mod owned {
             /// Specifies the priority ceiling.
             priority: crate::task::Priority,
         },
+        #[cfg(any(feature = "none", all(feature = "asp3", feature = "pi_mutex")))]
+        #[cfg_attr(
+            feature = "doc_cfg",
+            doc(cfg(any(feature = "none", all(feature = "asp3", feature = "pi_mutex"))))
+        )]
+        /// The priority inheritance protocol.
+        Inherit,
+    }
+
+    impl PriorityProtection {
+        /// Return `Some(Self::Inherit)` if it's supported by the target kernel.
+        ///
+        /// # Examples
+        ///
+        /// ```
+        /// use itron::mutex::PriorityProtection;
+        /// let priority_protection = PriorityProtection::inherit()
+        ///     .unwrap_or(PriorityProtection::None);
+        /// ```
+        #[inline]
+        #[allow(unreachable_code)]
+        pub const fn inherit() -> Option<Self> {
+            #[cfg(any(feature = "none", all(feature = "asp3", feature = "pi_mutex")))]
+            {
+                return Some(Self::Inherit);
+            }
+            None
+        }
     }
 
     /// The builder type for [mutexes](Mutex). Created by [`Mutex::build`].
@@ -653,10 +681,12 @@ mod owned {
                 PriorityProtection::None => {}
                 #[cfg(not(feature = "none"))]
                 PriorityProtection::Ceiling { priority } => {
-                    // `TA_CEILING` includes `TA_TPRI`, overwriting the choice
-                    // of `queue_order`
-                    self.raw.mtxatr |= abi::TA_CEILING;
+                    self.raw.mtxatr = abi::TA_CEILING;
                     self.raw.ceilpri = priority;
+                }
+                #[cfg(all(feature = "asp3", feature = "pi_mutex"))]
+                PriorityProtection::Inherit => {
+                    self.raw.mtxatr = abi::TA_INHERIT;
                 }
                 #[cfg(feature = "none")]
                 _ => unimplemented!(),

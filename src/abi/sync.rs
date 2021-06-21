@@ -13,6 +13,9 @@ pub const TA_CLR: ATR = 0x04;
 
 /// 優先度上限プロトコル
 pub const TA_CEILING: ATR = 0x03;
+#[cfg(all(feature = "asp3", feature = "pi_mutex"))]
+/// 優先度継承プロトコル
+pub const TA_INHERIT: ATR = 0x02;
 
 /*
  *  サービスコールの動作モードの定義

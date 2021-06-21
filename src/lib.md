@@ -10,12 +10,14 @@ This crate exposes a Cargo feature for each supported RTOS kernel
 implementation. The following ones are supported:
 
  - `asp3`: [TOPPERS/ASP3](https://toppers.jp/asp3-kernel.html)
-     - Additional features supported: `dcre` (dynamic object creation), `rstr_task` (restricted tasks), `messagebox` (message buffers), `ovrhdr` (overrun handlers), `subprio` (task subpriorities)
+     - Additional features supported: `dcre` (dynamic object creation), `rstr_task` (restricted tasks), `messagebox` (message buffers), `ovrhdr` (overrun handlers), `subprio` (task subpriorities), `pi_mutex` (priority inheritance; this is a [SOLID] extension)
  - `none` (default): Stub implementation that exposes all functions but always panics
 
 It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct).
 
 Items are `cfg`-gated according to the selected kernel's supported feature set so that the uses of non-existent features are detected at compile time.
+
+[SOLID]: https://solid.kmckk.com/SOLID/
 
 ## Cargo Features
 

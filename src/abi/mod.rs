@@ -14,6 +14,7 @@
 #![cfg_attr(feature = "messagebuf", doc = ", `messagebuf`")]
 #![cfg_attr(feature = "ovrhdr", doc = ", `ovrhdr`")]
 #![cfg_attr(feature = "subprio", doc = ", `subprio`")]
+#![cfg_attr(feature = "pi_mutex", doc = ", `pi_mutex`")]
 //! </i>
 #![allow(non_camel_case_types)]
 #![allow(unused_imports)]
