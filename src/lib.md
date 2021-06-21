@@ -10,12 +10,15 @@ This crate exposes a Cargo feature for each supported RTOS kernel
 implementation. The following ones are supported:
 
  - `asp3`: [TOPPERS/ASP3](https://toppers.jp/asp3-kernel.html)
-     - Additional features supported: `dcre` (dynamic object creation), `rstr_task` (restricted tasks), `messagebuf` (message buffers), `ovrhdr` (overrun handlers), `subprio` (task subpriorities), `pi_mutex` (priority inheritance; this is a [SOLID] extension)
+     - Additional features supported: `dcre` (dynamic object creation), `rstr_task` (restricted tasks), `messagebuf` (message buffers), `ovrhdr` (overrun handlers), `subprio` (task subpriorities)
+ - `solid_asp3`: TOPPERS/ASP3 with [SOLID] extensions
+     - Additional features supported: `dcre` (dynamic object creation), `messagebuf` (message buffers),  `pi_mutex` (priority inheritance)
  - `fmp3`: [TOPPERS/FMP3](https://toppers.jp/fmp3-kernel.html)
-     - Additional features supported: `dcre` (dynamic object creation; this is a SOLID extension)
+ - `solid_fmp3`: TOPPERS/FMP3 with [SOLID] extensions
+     - Additional features supported: `dcre` (dynamic object creation)
  - `none` (default): Stub implementation that exposes all functions but always panics
 
-It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct).
+It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct). Specifying unsupported features for a given kernel might result in a compiler or linker error.
 
 Items are `cfg`-gated according to the selected kernel's supported feature set so that the uses of non-existent features are detected at compile time.
 

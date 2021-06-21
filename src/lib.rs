@@ -39,11 +39,15 @@ unstable_module! {
     pub mod interrupt;
     pub mod kernel;
     pub mod memorypool;
-    #[cfg(any(all(feature = "asp3", feature = "messagebuf"), feature = "none"))]
+    #[cfg(any(
+        all(feature = "asp3", feature = "messagebuf"),
+        all(feature = "solid_asp3", feature = "messagebuf"),
+        feature = "none",
+    ))]
     pub mod messagebuffer;
     pub mod mutex;
     pub mod prioritydataqueue;
-    #[cfg(any(feature = "fmp3", feature = "none"))]
+    #[cfg(any(feature = "fmp3", feature = "solid_fmp3", feature = "none"))]
     pub mod processor;
     pub mod semaphore;
     pub mod task;

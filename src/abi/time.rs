@@ -1,7 +1,7 @@
 use super::{ER, HRTCNT, ID, RELTIM, STAT, SYSTIM};
 
 /// TOPPERS/ASP3 `T_RCYC`
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "solid_asp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RCYC {
@@ -12,7 +12,7 @@ pub struct T_RCYC {
 }
 
 /// TOPPERS/FMP3 `T_RCYC`
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RCYC {
@@ -25,7 +25,7 @@ pub struct T_RCYC {
 }
 
 /// TOPPERS/ASP3 `T_RALM`
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "solid_asp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RALM {
@@ -36,7 +36,7 @@ pub struct T_RALM {
 }
 
 /// TOPPERS/ASP3 `T_RALM`
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RALM {
@@ -59,7 +59,12 @@ pub struct T_ROVR {
 }
 
 /// 時間管理機能
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn set_tim(systim: SYSTIM) -> ER;
     pub fn get_tim(p_systim: *mut SYSTIM) -> ER;
@@ -79,7 +84,7 @@ extern "C" {
 // TODO: `acre_alm`
 
 /// 時間管理機能
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 extern "C" {
     pub fn msta_cyc(cycid: ID, prcid: ID) -> ER;
     pub fn msta_alm(almid: ID, almtim: RELTIM, prcid: ID) -> ER;

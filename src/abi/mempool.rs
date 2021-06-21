@@ -1,6 +1,11 @@
 use super::{uint_t, ATR, ER, ER_ID, ID, MPF_T, TMO};
 
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RMPF {
@@ -12,7 +17,8 @@ pub struct T_RMPF {
 
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -30,7 +36,12 @@ pub struct T_CMPF {
 }
 
 /// メモリプール管理機能
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn get_mpf(mpfid: ID, p_blk: *mut *mut u8) -> ER;
     pub fn pget_mpf(mpfid: ID, p_blk: *mut *mut u8) -> ER;
@@ -43,7 +54,7 @@ extern "C" {
 /// メモリプール管理機能
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 extern "C" {
     pub fn acre_mpf(pk_cmpf: *const T_CMPF) -> ER_ID;

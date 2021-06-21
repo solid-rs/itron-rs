@@ -17,23 +17,28 @@ jobs:
 
           # TOPPERS/ASP3
           - { features: "asp3" }
+          - { features: "asp3,dcre" }
           - { features: "asp3,rstr_task" }
           - { features: "asp3,messagebuf" }
           - { features: "asp3,ovrhdr" }
           - { features: "asp3,subprio" }
-          - { features: "asp3,pi_mutex" }
-          - { features: "asp3,rstr_task,messagebuf,ovrhdr,subprio,pi_mutex" }
-          - { features: "asp3,dcre" }
-          - { features: "asp3,dcre,rstr_task" }
-          - { features: "asp3,dcre,messagebuf" }
-          - { features: "asp3,dcre,ovrhdr" }
-          - { features: "asp3,dcre,subprio" }
-          - { features: "asp3,dcre,pi_mutex" }
-          - { features: "asp3,dcre,rstr_task,messagebuf,ovrhdr,subprio,pi_mutex" }
+
+          # SOLID/ASP3
+          - { features: "solid_asp3" }
+          - { features: "solid_asp3,messagebuf" }
+          - { features: "solid_asp3,pi_mutex" }
+          - { features: "solid_asp3,messagebuf,pi_mutex" }
+          - { features: "solid_asp3,dcre" }
+          - { features: "solid_asp3,dcre,messagebuf" }
+          - { features: "solid_asp3,dcre,pi_mutex" }
+          - { features: "solid_asp3,dcre,messagebuf,pi_mutex" }
 
           # TOPPERS/FMP3
           - { features: "fmp3" }
-          - { features: "fmp3,dcre" }
+
+          # SOLID/FMP3
+          - { features: "solid_fmp3" }
+          - { features: "solid_fmp3,dcre" }
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust toolchain

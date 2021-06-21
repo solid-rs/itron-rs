@@ -25,23 +25,38 @@ jobs:
       - name: Rename the crate
         run: |
           sed -e 's/name = .*/name = "itron_asp3"/' -i Cargo.toml
-
       - name: Build Documentation for TOPPERS/ASP3
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_asp3 --features nightly,unstable,asp3,dcre,rstr_task,messagebuf,ovrhdr,subprio,pi_mutex
+          args: -p itron_asp3 --features nightly,unstable,asp3,dcre,rstr_task,messagebuf,ovrhdr,subprio
 
+      - name: Rename the crate
+        run: |
+          sed -e 's/name = .*/name = "itron_solid_asp3"/' -i Cargo.toml
+      - name: Build Documentation for TOPPERS/ASP3
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: -p itron_solid_asp3 --features nightly,unstable,solid_asp3,dcre,messagebuf,pi_mutex
 
       - name: Rename the crate
         run: |
           sed -e 's/name = .*/name = "itron_fmp3"/' -i Cargo.toml
-
       - name: Build Documentation for TOPPERS/FMP3
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_fmp3 --features nightly,unstable,fmp3,dcre
+          args: -p itron_fmp3 --features nightly,unstable,fmp3
+
+      - name: Rename the crate
+        run: |
+          sed -e 's/name = .*/name = "itron_solid_fmp3"/' -i Cargo.toml
+      - name: Build Documentation for TOPPERS/FMP3
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: -p itron_solid_fmp3 --features nightly,unstable,solid_fmp3,dcre
 
       # ------------------------------------------------------------------------
 

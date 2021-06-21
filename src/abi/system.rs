@@ -1,7 +1,12 @@
 use super::{bool_t, uint_t, ER, ID, PRI};
 
 /// システム状態管理機能
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn rot_rdq(tskpri: PRI) -> ER;
     pub fn get_tid(p_tskid: *mut ID) -> ER;
@@ -19,7 +24,7 @@ extern "C" {
     pub fn ext_ker() -> ER;
 }
 
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 extern "C" {
     pub fn mrot_rdq(tskpri: PRI, prcid: ID) -> ER;
     pub fn get_pid(p_prcid: *mut ID) -> ER;

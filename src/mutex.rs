@@ -309,7 +309,11 @@ impl ErrorKind for BuildError {
             abi::E_NOID => Some(Self::OutOfMemory(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_PAR | abi::E_RSATR => Some(Self::BadParam(Kind::from_error_code(code))),
-            #[cfg(any(all(feature = "asp3", feature = "subprio"), feature = "fmp3"))]
+            #[cfg(any(
+                all(feature = "asp3", feature = "subprio"),
+                feature = "fmp3",
+                feature = "solid_fmp3"
+            ))]
             abi::E_ILUSE => Some(Self::BadParam(Kind::from_error_code(code))),
             _ => None,
         }
@@ -561,10 +565,10 @@ mod owned {
             /// Specifies the priority ceiling.
             priority: crate::task::Priority,
         },
-        #[cfg(any(feature = "none", all(feature = "asp3", feature = "pi_mutex")))]
+        #[cfg(any(feature = "none", all(feature = "solid_asp3", feature = "pi_mutex")))]
         #[cfg_attr(
             feature = "doc_cfg",
-            doc(cfg(any(feature = "none", all(feature = "asp3", feature = "pi_mutex"))))
+            doc(cfg(any(feature = "none", all(feature = "solid_asp3", feature = "pi_mutex"))))
         )]
         /// The priority inheritance protocol.
         Inherit,
@@ -583,7 +587,7 @@ mod owned {
         #[inline]
         #[allow(unreachable_code)]
         pub const fn inherit() -> Option<Self> {
-            #[cfg(any(feature = "none", all(feature = "asp3", feature = "pi_mutex")))]
+            #[cfg(any(feature = "none", all(feature = "solid_asp3", feature = "pi_mutex")))]
             {
                 return Some(Self::Inherit);
             }
@@ -684,7 +688,7 @@ mod owned {
                     self.raw.mtxatr = abi::TA_CEILING;
                     self.raw.ceilpri = priority;
                 }
-                #[cfg(all(feature = "asp3", feature = "pi_mutex"))]
+                #[cfg(all(feature = "solid_asp3", feature = "pi_mutex"))]
                 PriorityProtection::Inherit => {
                     self.raw.mtxatr = abi::TA_INHERIT;
                 }

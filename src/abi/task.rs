@@ -45,10 +45,16 @@ pub const TTW_RDTQ: STAT = 0x0020;
 pub const TTW_SPDQ: STAT = 0x0100;
 /// 優先度データキューからの受信待ち
 pub const TTW_RPDQ: STAT = 0x0200;
-#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "messagebuf"),
+    all(feature = "solid_asp3", feature = "messagebuf")
+))]
 /// メッセージバッファへの送信待ち
 pub const TTW_SMBF: STAT = 0x0400;
-#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "messagebuf"),
+    all(feature = "solid_asp3", feature = "messagebuf")
+))]
 /// メッセージバッファからの受信待ち
 pub const TTW_RMBF: STAT = 0x0800;
 /// ミューテックスのロック待ち状態
@@ -70,7 +76,10 @@ pub const TPRI_SELF: PRI = 0;
 pub const TPRI_INI: PRI = 0;
 
 /// TOPPERS/ASP3 dynamic creation extension `T_CTSK`
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "solid_asp3", feature = "dcre")
+))]
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
 pub struct T_CTSK {
@@ -89,7 +98,7 @@ pub struct T_CTSK {
 }
 
 /// SOLID/FMP3 extension
-#[cfg(all(feature = "fmp3", feature = "dcre"))]
+#[cfg(all(feature = "solid_fmp3", feature = "dcre"))]
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
 pub struct T_CTSK {
@@ -112,7 +121,7 @@ pub struct T_CTSK {
 }
 
 /// TOPPERS/ASP3 `T_RTSK`
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "solid_asp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RTSK {
@@ -139,7 +148,7 @@ pub struct T_RTSK {
 }
 
 /// TOPPERS/FMP3 `T_RTSK`
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RTSK {
@@ -170,7 +179,12 @@ pub struct T_RTSK {
 }
 
 /// タスク管理機能
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn act_tsk(tskid: ID) -> ER;
     pub fn can_act(tskid: ID) -> ER_UINT;
@@ -182,7 +196,7 @@ extern "C" {
 }
 
 /// タスク管理機能
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 extern "C" {
     pub fn mact_tsk(tskid: ID, prcid: ID) -> ER;
     pub fn mig_tsk(tskid: ID, prcid: ID) -> ER;
@@ -190,20 +204,30 @@ extern "C" {
 
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 extern "C" {
     pub fn acre_tsk(pk_ctsk: *const T_CTSK) -> ER_ID;
     pub fn del_tsk(tskid: ID) -> ER;
 }
 
-#[cfg(any(all(feature = "asp3", feature = "subprio"), feature = "fmp3"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "subprio"),
+    feature = "fmp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn chg_spr(tskid: ID, subpri: uint_t) -> ER;
 }
 
 /// タスク付属同期機能
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn slp_tsk() -> ER;
     pub fn tslp_tsk(tmout: TMO) -> ER;
@@ -216,7 +240,12 @@ extern "C" {
 }
 
 /// タスク終了機能
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn ext_tsk() -> ER;
     pub fn ras_ter(tskid: ID) -> ER;

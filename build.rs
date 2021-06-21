@@ -2,7 +2,7 @@ use std::env;
 
 fn main() {
     // Validate the kernel selection and select `std` if none are selected
-    const KERNEL_LIST: &[&str] = &["asp3", "fmp3"];
+    const KERNEL_LIST: &[&str] = &["asp3", "fmp3", "solid_asp3", "solid_fmp3"];
     let selected_kernels: Vec<_> = KERNEL_LIST
         .iter()
         .filter(|name| {

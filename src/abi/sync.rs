@@ -13,7 +13,7 @@ pub const TA_CLR: ATR = 0x04;
 
 /// 優先度上限プロトコル
 pub const TA_CEILING: ATR = 0x03;
-#[cfg(all(feature = "asp3", feature = "pi_mutex"))]
+#[cfg(all(feature = "solid_asp3", feature = "pi_mutex"))]
 /// 優先度継承プロトコル
 pub const TA_INHERIT: ATR = 0x02;
 
@@ -35,7 +35,12 @@ pub const TSPN_UNL: STAT = 0x01;
 #[cfg(feature = "fmp3")]
 pub const TSPN_LOC: STAT = 0x02;
 
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RSEM {
@@ -45,7 +50,12 @@ pub struct T_RSEM {
     pub semcnt: uint_t,
 }
 
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RFLG {
@@ -55,7 +65,12 @@ pub struct T_RFLG {
     pub flgptn: FLGPTN,
 }
 
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RDTQ {
@@ -67,7 +82,12 @@ pub struct T_RDTQ {
     pub sdtqcnt: uint_t,
 }
 
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RPDQ {
@@ -79,7 +99,12 @@ pub struct T_RPDQ {
     pub spdqcnt: uint_t,
 }
 
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RMTX {
@@ -89,7 +114,10 @@ pub struct T_RMTX {
     pub wtskid: ID,
 }
 
-#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "messagebuf"),
+    all(feature = "solid_asp3", feature = "messagebuf")
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RMBF {
@@ -103,7 +131,7 @@ pub struct T_RMBF {
     pub fmbfsz: usize,
 }
 
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RSPN {
@@ -113,7 +141,8 @@ pub struct T_RSPN {
 
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -128,7 +157,8 @@ pub struct T_CSEM {
 
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -141,7 +171,8 @@ pub struct T_CFLG {
 
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -156,7 +187,8 @@ pub struct T_CDTQ {
 
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -173,7 +205,8 @@ pub struct T_CPDQ {
 
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -184,7 +217,7 @@ pub struct T_CMTX {
     pub ceilpri: PRI,
 }
 
-#[cfg(all(feature = "fmp3", feature = "dcre"))]
+#[cfg(all(feature = "solid_fmp3", feature = "dcre"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CSPN {
@@ -193,7 +226,7 @@ pub struct T_CSPN {
 }
 
 /// SOLID/ASP3 extension
-#[cfg(all(feature = "asp3", feature = "dcre", feature = "messagebuf"))]
+#[cfg(all(feature = "solid_asp3", feature = "dcre", feature = "messagebuf"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CMBF {
@@ -208,7 +241,12 @@ pub struct T_CMBF {
 }
 
 /// 同期・通信機能
-#[cfg(any(feature = "asp3", feature = "fmp3"))]
+#[cfg(any(
+    feature = "asp3",
+    feature = "fmp3",
+    feature = "solid_asp3",
+    feature = "solid_fmp3"
+))]
 extern "C" {
     pub fn sig_sem(semid: ID) -> ER;
     pub fn wai_sem(semid: ID) -> ER;
@@ -259,7 +297,7 @@ extern "C" {
 }
 
 /// 同期・通信機能
-#[cfg(feature = "fmp3")]
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
 extern "C" {
     pub fn loc_spn(spnid: ID) -> ER;
     pub fn unl_spn(spnid: ID) -> ER;
@@ -270,7 +308,8 @@ extern "C" {
 /// 同期・通信機能
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
-    all(feature = "fmp3", feature = "dcre")
+    all(feature = "solid_asp3", feature = "dcre"),
+    all(feature = "solid_fmp3", feature = "dcre")
 ))]
 extern "C" {
     pub fn acre_sem(pk_csem: *const T_CSEM) -> ER_ID;
@@ -286,14 +325,17 @@ extern "C" {
 }
 
 /// 同期・通信機能
-#[cfg(all(feature = "fmp3", feature = "dcre"))]
+#[cfg(all(feature = "solid_fmp3", feature = "dcre"))]
 extern "C" {
     pub fn acre_spn(pk_cspn: *const T_CSPN) -> ER_ID;
     pub fn del_spn(spnid: ID) -> ER;
 }
 
 /// 同期・通信機能
-#[cfg(all(feature = "asp3", feature = "messagebuf"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "messagebuf"),
+    all(feature = "solid_asp3", feature = "messagebuf")
+))]
 extern "C" {
     pub fn snd_mbf(mbfid: ID, msg: *const u8, msgsz: uint_t) -> ER;
     pub fn psnd_mbf(mbfid: ID, msg: *const u8, msgsz: uint_t) -> ER;
@@ -306,7 +348,7 @@ extern "C" {
 }
 
 /// SOLID/ASP3 extension
-#[cfg(all(feature = "asp3", feature = "dcre", feature = "messagebuf"))]
+#[cfg(all(feature = "solid_asp3", feature = "dcre", feature = "messagebuf"))]
 extern "C" {
     pub fn acre_mbf(pk_cmbf: *const T_CMBF) -> ER_ID;
     pub fn del_mbf(mbfid: ID) -> ER;

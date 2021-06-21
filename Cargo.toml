@@ -26,7 +26,9 @@ unstable = []
 none = ["dcre", "rstr_task", "messagebuf", "ovrhdr", "subprio",
     "pi_mutex"]
 asp3 = []
+solid_asp3 = []
 fmp3 = []
+solid_fmp3 = []
 
 # --------------------------------------------------------
 # Kernel customization

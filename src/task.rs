@@ -49,8 +49,8 @@ impl ErrorKind for ActivateError {
 
 define_error_kind! {
     /// Error type for [`TaskRef::activate_on`].
-    #[cfg(any(feature = "none", feature = "fmp3"))]
-    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))))]
     pub enum ActivateOnError {
         #[cfg(not(feature = "none"))]
         BadContext,
@@ -70,7 +70,7 @@ define_error_kind! {
     }
 }
 
-#[cfg(any(feature = "none", feature = "fmp3"))]
+#[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
 impl ErrorKind for ActivateOnError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
@@ -1088,8 +1088,11 @@ impl TaskRef<'_> {
     /// the specified processor.
     #[inline]
     #[doc(alias = "mact_tsk")]
-    #[cfg(any(feature = "none", feature = "fmp3"))]
-    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
+    #[cfg_attr(
+        feature = "doc_cfg",
+        doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3")))
+    )]
     pub fn activate_on(
         self,
         processor: crate::processor::Processor,
@@ -1405,10 +1408,10 @@ pub use self::owned::*;
 mod owned {
     use super::*;
 
-    #[cfg(any(feature = "none", feature = "fmp3"))]
+    #[cfg(any(feature = "none", feature = "solid_fmp3"))]
     pub use self::processor_set::*;
 
-    #[cfg(any(feature = "none", feature = "fmp3"))]
+    #[cfg(any(feature = "none", feature = "solid_fmp3"))]
     mod processor_set {
         use crate::{abi, processor::Processor};
         use core::convert::TryFrom;
@@ -1525,7 +1528,7 @@ mod owned {
                 stack: builder_hole::__stack_is_not_specified__,
                 initial_priority: builder_hole::__initial_priority_is_not_specified__,
                 assign_to_current_procesor: true,
-                #[cfg(feature = "asp3")]
+                #[cfg(any(feature = "asp3", feature = "solid_asp3"))]
                 raw: abi::T_CTSK {
                     tskatr: abi::TA_NULL,
                     exinf: abi::EXINF::uninit(),
@@ -1534,7 +1537,7 @@ mod owned {
                     stksz: 0,
                     stk: core::ptr::null_mut(),
                 },
-                #[cfg(feature = "fmp3")]
+                #[cfg(feature = "solid_fmp3")]
                 raw: abi::T_CTSK {
                     tskatr: abi::TA_NULL,
                     exinf: abi::EXINF::uninit(),
@@ -1611,8 +1614,11 @@ mod owned {
         /// Specify the task's initial assigned processor. Defaults to the
         /// current processor when unspecified.
         #[inline]
-        #[cfg(any(feature = "none", feature = "fmp3"))]
-        #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+        #[cfg(any(feature = "none", feature = "solid_fmp3"))]
+        #[cfg_attr(
+            feature = "doc_cfg",
+            doc(cfg(any(feature = "none", feature = "solid_fmp3")))
+        )]
         pub fn initial_processor(self, value: crate::processor::Processor) -> Self {
             Builder {
                 assign_to_current_procesor: false,
@@ -1648,8 +1654,11 @@ mod owned {
         ///     .expect("failed to create a task");
         /// ```
         #[inline]
-        #[cfg(any(feature = "none", feature = "fmp3"))]
-        #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+        #[cfg(any(feature = "none", feature = "solid_fmp3"))]
+        #[cfg_attr(
+            feature = "doc_cfg",
+            doc(cfg(any(feature = "none", feature = "solid_fmp3")))
+        )]
         pub fn processor_affinity(self, value: impl IntoProcessorSet) -> Self {
             Builder {
                 #[cfg(not(feature = "none"))]
@@ -1665,7 +1674,7 @@ mod owned {
     impl Builder<(), (), ()> {
         /// Create a task using the specified parameters.
         pub fn finish(mut self) -> Result<Task, Error<BuildError>> {
-            #[cfg(feature = "fmp3")]
+            #[cfg(feature = "solid_fmp3")]
             if self.assign_to_current_procesor {
                 unsafe { Error::err_if_negative(abi::get_pid(&mut self.raw.iprcid))? };
             }
