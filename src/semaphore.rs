@@ -137,6 +137,8 @@ define_error_kind! {
         BadId,
         #[cfg(any())]
         AccessDenied,
+        #[cfg(not(feature = "none"))]
+        Timeout,
     }
 }
 
@@ -149,6 +151,8 @@ impl ErrorKind for PollError {
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_TMOUT => Some(Self::Timeout(Kind::from_error_code(code))),
             _ => None,
         }
     }

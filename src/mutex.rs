@@ -154,6 +154,8 @@ define_error_kind! {
         /// The calling task already owns the mutex.
         #[cfg(not(feature = "none"))]
         Deadlock,
+        #[cfg(not(feature = "none"))]
+        Timeout,
     }
 }
 
@@ -170,6 +172,8 @@ impl ErrorKind for TryLockError {
             abi::E_ILUSE => Some(Self::BadParam(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_OBJ => Some(Self::Deadlock(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_TMOUT => Some(Self::Timeout(Kind::from_error_code(code))),
             _ => None,
         }
     }

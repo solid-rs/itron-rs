@@ -4,6 +4,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+- **Added:** `itron::{mutex::TryLockError, semaphore::PollError}::Timeout`
+
 ## [0.1.1] - 2021-06-21
 
 - **Added:** `itron::abi::{TA_TPRI, TA_WMUL, TA_CLR, TA_RTSK, TA_CEILING, TWF_*, TTW_*}`
