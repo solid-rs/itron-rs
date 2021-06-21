@@ -1,5 +1,8 @@
 use super::ER;
 
+/// 正常終了
+pub const E_OK: ER = 0;
+
 /// システムエラー
 pub const E_SYS: ER = -5;
 
