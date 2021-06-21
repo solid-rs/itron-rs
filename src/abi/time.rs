@@ -75,6 +75,9 @@ extern "C" {
     pub fn ref_alm(almid: ID, pk_ralm: *mut T_RALM) -> ER;
 }
 
+// TODO: `acre_cyc`
+// TODO: `acre_alm`
+
 /// 時間管理機能
 #[cfg(feature = "fmp3")]
 extern "C" {

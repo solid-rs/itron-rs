@@ -33,6 +33,7 @@ jobs:
 
           # TOPPERS/FMP3
           - { features: "fmp3" }
+          - { features: "fmp3,dcre" }
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust toolchain

@@ -36,6 +36,17 @@ pub struct Processor {
 impl Processor {
     /// Construct `Processor` from a raw processor ID.
     #[inline]
+    pub const fn from_raw(raw: abi::ID) -> Option<Self> {
+        // `map` is not `const fn` yet
+        if let Some(raw) = abi::NonNullID::new(raw) {
+            Some(Self::from_raw_nonnull(raw))
+        } else {
+            None
+        }
+    }
+
+    /// Construct `Processor` from a non-null raw processor ID.
+    #[inline]
     pub const fn from_raw_nonnull(raw: abi::NonNullID) -> Self {
         Self { raw }
     }

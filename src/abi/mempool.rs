@@ -10,7 +10,10 @@ pub struct T_RMPF {
     pub fblkcnt: uint_t,
 }
 
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CMPF {
@@ -38,7 +41,10 @@ extern "C" {
 }
 
 /// メモリプール管理機能
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 extern "C" {
     pub fn acre_mpf(pk_cmpf: *const T_CMPF) -> ER_ID;
     pub fn del_mpf(mpfid: ID) -> ER;

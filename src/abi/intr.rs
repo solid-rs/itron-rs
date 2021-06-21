@@ -18,6 +18,8 @@ extern "C" {
     pub fn get_ipm(p_intpri: *mut PRI) -> ER;
 }
 
+// TODO: `acre_isr`
+
 /// CPU例外管理機能
 #[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {

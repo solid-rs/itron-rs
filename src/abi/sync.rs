@@ -111,7 +111,10 @@ pub struct T_RSPN {
     pub spnstat: STAT,
 }
 
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CSEM {
@@ -123,7 +126,10 @@ pub struct T_CSEM {
     pub maxsem: uint_t,
 }
 
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CFLG {
@@ -133,7 +139,10 @@ pub struct T_CFLG {
     pub iflgptn: FLGPTN,
 }
 
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CDTQ {
@@ -145,7 +154,10 @@ pub struct T_CDTQ {
     pub dtqmb: *mut u8,
 }
 
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CPDQ {
@@ -159,7 +171,10 @@ pub struct T_CPDQ {
     pub pdqmb: *mut u8,
 }
 
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_CMTX {
@@ -167,6 +182,14 @@ pub struct T_CMTX {
     pub mtxatr: ATR,
     /// ミューテックスの上限優先度
     pub ceilpri: PRI,
+}
+
+#[cfg(all(feature = "fmp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_CSPN {
+    /// スピンロック属性
+    pub spnatr: ATR,
 }
 
 /// SOLID/ASP3 extension
@@ -245,7 +268,10 @@ extern "C" {
 }
 
 /// 同期・通信機能
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 extern "C" {
     pub fn acre_sem(pk_csem: *const T_CSEM) -> ER_ID;
     pub fn acre_flg(pk_cflg: *const T_CFLG) -> ER_ID;
@@ -257,6 +283,13 @@ extern "C" {
     pub fn del_dtq(dtqid: ID) -> ER;
     pub fn del_pdq(pdqid: ID) -> ER;
     pub fn del_mtx(mtxid: ID) -> ER;
+}
+
+/// 同期・通信機能
+#[cfg(all(feature = "fmp3", feature = "dcre"))]
+extern "C" {
+    pub fn acre_spn(pk_cspn: *const T_CSPN) -> ER_ID;
+    pub fn del_spn(spnid: ID) -> ER;
 }
 
 /// 同期・通信機能

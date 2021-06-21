@@ -41,7 +41,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_fmp3 --features nightly,unstable,fmp3
+          args: -p itron_fmp3 --features nightly,unstable,fmp3,dcre
 
       # ------------------------------------------------------------------------
 

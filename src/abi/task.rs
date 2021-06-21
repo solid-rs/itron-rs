@@ -88,6 +88,29 @@ pub struct T_CTSK {
     pub stk: *mut u8,
 }
 
+/// SOLID/FMP3 extension
+#[cfg(all(feature = "fmp3", feature = "dcre"))]
+#[derive(Debug, Clone, Copy)]
+#[repr(C)]
+pub struct T_CTSK {
+    /// タスク属性
+    pub tskatr: ATR,
+    /// タスクの拡張情報
+    pub exinf: EXINF,
+    /// タスクのメインルーチンの先頭番地
+    pub task: TASK,
+    /// タスクの起動時優先度
+    pub itskpri: PRI,
+    /// タスクのスタック領域のサイズ
+    pub stksz: usize,
+    /// タスクのスタック領域の先頭番地
+    pub stk: *mut u8,
+    /// タスクの初期割付けプロセッサ
+    pub iprcid: ID,
+    /// タスクの割付け可能プロセッサ
+    pub affinity: uint_t,
+}
+
 /// TOPPERS/ASP3 `T_RTSK`
 #[cfg(feature = "asp3")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -165,7 +188,10 @@ extern "C" {
     pub fn mig_tsk(tskid: ID, prcid: ID) -> ER;
 }
 
-#[cfg(all(feature = "asp3", feature = "dcre"))]
+#[cfg(any(
+    all(feature = "asp3", feature = "dcre"),
+    all(feature = "fmp3", feature = "dcre")
+))]
 extern "C" {
     pub fn acre_tsk(pk_ctsk: *const T_CTSK) -> ER_ID;
     pub fn del_tsk(tskid: ID) -> ER;

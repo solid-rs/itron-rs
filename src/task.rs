@@ -792,6 +792,10 @@ define_error_kind! {
 #[cfg(feature = "dcre")]
 impl ErrorKind for BuildError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
+        // `Builder::build` uses `get_pid` to get the current processor and
+        // coalesces its error code into this error kind type. Thus, this error
+        // kind type must be able to handle errors from both `acre_tsk` and
+        // `get_pid`!
         match code.get() {
             // `E_MACV` is considered critical, hence excluded
             #[cfg(not(feature = "none"))]
@@ -1401,6 +1405,70 @@ pub use self::owned::*;
 mod owned {
     use super::*;
 
+    #[cfg(any(feature = "none", feature = "fmp3"))]
+    pub use self::processor_set::*;
+
+    #[cfg(any(feature = "none", feature = "fmp3"))]
+    mod processor_set {
+        use crate::{abi, processor::Processor};
+        use core::convert::TryFrom;
+
+        /// The trait implemented by types that can be passed to
+        /// [`crate::task::Builder::processor_affinity`]. This trait is [sealed].
+        ///
+        /// [sealed]: https://rust-lang.github.io/api-guidelines/future-proofing.html#sealed-traits-protect-against-downstream-implementations-c-sealed
+        #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+        pub trait IntoProcessorSet: private::Sealed + Sized {
+            #[doc(hidden)]
+            fn into_uint_t(self) -> abi::uint_t;
+        }
+
+        /// Implements [the sealed trait pattern (C-SEALED)].
+        ///
+        /// [the sealed trait pattern (C-SEALED)]: https://rust-lang.github.io/api-guidelines/future-proofing.html#sealed-traits-protect-against-downstream-implementations-c-sealed
+        mod private {
+            use super::*;
+
+            pub trait Sealed {}
+
+            impl<T: IntoIterator<Item = Processor>> Sealed for T {}
+            impl Sealed for Processor {}
+            impl Sealed for AllProcessors {}
+        }
+
+        impl<T: IntoIterator<Item = Processor>> IntoProcessorSet for T {
+            #[doc(hidden)]
+            #[inline]
+            fn into_uint_t(self) -> abi::uint_t {
+                self.into_iter()
+                    .fold(0, |st, processor| st | processor.into_uint_t())
+            }
+        }
+
+        impl IntoProcessorSet for Processor {
+            #[doc(hidden)]
+            #[inline]
+            fn into_uint_t(self) -> abi::uint_t {
+                u32::try_from(self.as_raw() - 1)
+                    .ok()
+                    .and_then(|i| (1 as abi::uint_t).checked_shl(i))
+                    .expect("invalid processor ID")
+            }
+        }
+
+        /// An instance of [`IntoProcessorSet`] specifying all processors.
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+        pub struct AllProcessors;
+
+        impl IntoProcessorSet for AllProcessors {
+            #[doc(hidden)]
+            #[inline]
+            fn into_uint_t(self) -> abi::uint_t {
+                abi::uint_t::MAX
+            }
+        }
+    }
+
     /// The builder type for [tasks](Task). Created by [`Task::build`].
     ///
     /// Its generic parameters are an implementation detail.
@@ -1409,6 +1477,7 @@ mod owned {
         start: Start,
         stack: Stack,
         initial_priority: InitialPriority,
+        assign_to_current_procesor: bool,
         #[cfg(not(feature = "none"))]
         raw: abi::T_CTSK,
     }
@@ -1455,7 +1524,8 @@ mod owned {
                 start: builder_hole::__start_is_not_specified__,
                 stack: builder_hole::__stack_is_not_specified__,
                 initial_priority: builder_hole::__initial_priority_is_not_specified__,
-                #[cfg(not(feature = "none"))]
+                assign_to_current_procesor: true,
+                #[cfg(feature = "asp3")]
                 raw: abi::T_CTSK {
                     tskatr: abi::TA_NULL,
                     exinf: abi::EXINF::uninit(),
@@ -1463,6 +1533,17 @@ mod owned {
                     itskpri: 0,
                     stksz: 0,
                     stk: core::ptr::null_mut(),
+                },
+                #[cfg(feature = "fmp3")]
+                raw: abi::T_CTSK {
+                    tskatr: abi::TA_NULL,
+                    exinf: abi::EXINF::uninit(),
+                    task: None,
+                    itskpri: 0,
+                    stksz: 0,
+                    stk: core::ptr::null_mut(),
+                    affinity: abi::uint_t::MAX,
+                    iprcid: 0,
                 },
             }
         }
@@ -1477,9 +1558,12 @@ mod owned {
         ) -> Builder<(), Stack, InitialPriority> {
             let (task, exinf) = value.into_closure();
             Builder {
+                // FIXME: Use the struct update syntax when rust-lang/rfcs#2528
+                //        is implemented
                 start: (),
                 stack: self.stack,
                 initial_priority: self.initial_priority,
+                assign_to_current_procesor: self.assign_to_current_procesor,
                 #[cfg(not(feature = "none"))]
                 raw: abi::T_CTSK {
                     task: Some(task),
@@ -1497,6 +1581,7 @@ mod owned {
                 start: self.start,
                 stack: (),
                 initial_priority: self.initial_priority,
+                assign_to_current_procesor: self.assign_to_current_procesor,
                 #[cfg(not(feature = "none"))]
                 raw: abi::T_CTSK {
                     stksz: size,
@@ -1514,6 +1599,7 @@ mod owned {
                 start: self.start,
                 stack: self.stack,
                 initial_priority: (),
+                assign_to_current_procesor: self.assign_to_current_procesor,
                 #[cfg(not(feature = "none"))]
                 raw: abi::T_CTSK {
                     itskpri: value,
@@ -1521,11 +1607,69 @@ mod owned {
                 },
             }
         }
+
+        /// Specify the task's initial assigned processor. Defaults to the
+        /// current processor when unspecified.
+        #[inline]
+        #[cfg(any(feature = "none", feature = "fmp3"))]
+        #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+        pub fn initial_processor(self, value: crate::processor::Processor) -> Self {
+            Builder {
+                assign_to_current_procesor: false,
+                #[cfg(not(feature = "none"))]
+                raw: abi::T_CTSK {
+                    iprcid: value.as_raw(),
+                    ..self.raw
+                },
+                ..self
+            }
+        }
+
+        /// Specify the task's assignable processsor set. Defaults to all
+        /// processors when unspecified.
+        ///
+        /// This function might panic if an invalid processor ID is specified.
+        ///
+        /// # Examples
+        ///
+        /// ```rust,no_run
+        /// #![feature(const_option)]
+        /// use itron::{task::Task, processor::Processor};
+        /// const P1: Processor = Processor::from_raw(1).unwrap();
+        /// const P3: Processor = Processor::from_raw(3).unwrap();
+        /// const P4: Processor = Processor::from_raw(4).unwrap();
+        /// let task = Task::build()
+        ///     .start(move || {})
+        ///     .stack(4096)
+        ///     .initial_priority(4)
+        ///     .initial_processor(P3)
+        ///     .processor_affinity([P1, P3, P4])
+        ///     .finish()
+        ///     .expect("failed to create a task");
+        /// ```
+        #[inline]
+        #[cfg(any(feature = "none", feature = "fmp3"))]
+        #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+        pub fn processor_affinity(self, value: impl IntoProcessorSet) -> Self {
+            Builder {
+                #[cfg(not(feature = "none"))]
+                raw: abi::T_CTSK {
+                    affinity: value.into_uint_t(),
+                    ..self.raw
+                },
+                ..self
+            }
+        }
     }
 
     impl Builder<(), (), ()> {
         /// Create a task using the specified parameters.
-        pub fn finish(self) -> Result<Task, Error<BuildError>> {
+        pub fn finish(mut self) -> Result<Task, Error<BuildError>> {
+            #[cfg(feature = "fmp3")]
+            if self.assign_to_current_procesor {
+                unsafe { Error::err_if_negative(abi::get_pid(&mut self.raw.iprcid))? };
+            }
+
             match () {
                 #[cfg(not(feature = "none"))]
                 () => unsafe {
