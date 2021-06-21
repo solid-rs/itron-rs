@@ -5,7 +5,6 @@ use crate::{
     abi,
     error::{Error, ErrorCode, ErrorKind, Kind},
     time::Timeout,
-    wait::QueueOrder,
 };
 
 define_error_kind! {
@@ -481,6 +480,7 @@ pub use self::owned::*;
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
 mod owned {
     use super::*;
+    use crate::wait::QueueOrder;
 
     /// The builder type for [semaphores](Semaphore). Created by [`Semaphore::build`].
     ///
@@ -590,6 +590,7 @@ mod owned {
 
     impl Builder {
         /// Create a semaphore using the specified parameters.
+        #[allow(unused_mut)]
         pub fn finish(mut self) -> Result<Semaphore, Error<BuildError>> {
             #[cfg(not(feature = "none"))]
             if self.initial_default {

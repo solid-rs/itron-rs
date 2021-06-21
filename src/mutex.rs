@@ -5,7 +5,6 @@ use crate::{
     abi,
     error::{Error, ErrorCode, ErrorKind, Kind},
     time::Timeout,
-    wait::QueueOrder,
 };
 
 define_error_kind! {
@@ -553,6 +552,7 @@ pub use self::owned::*;
 #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
 mod owned {
     use super::*;
+    use crate::wait::QueueOrder;
 
     /// Specifies a priority protection protocol used by a [mutex](Mutex).
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -679,6 +679,7 @@ mod owned {
 
     impl Builder {
         /// Create a mutex using the specified parameters.
+        #[allow(unused_mut)]
         pub fn finish(mut self) -> Result<Mutex, Error<BuildError>> {
             match self.priority_protection {
                 #[cfg(not(feature = "none"))]

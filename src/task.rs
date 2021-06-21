@@ -1673,6 +1673,7 @@ mod owned {
 
     impl Builder<(), (), ()> {
         /// Create a task using the specified parameters.
+        #[allow(unused_mut)]
         pub fn finish(mut self) -> Result<Task, Error<BuildError>> {
             #[cfg(feature = "solid_fmp3")]
             if self.assign_to_current_procesor {
