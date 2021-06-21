@@ -309,7 +309,7 @@ impl ErrorKind for BuildError {
             abi::E_NOID => Some(Self::OutOfMemory(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_PAR | abi::E_RSATR => Some(Self::BadParam(Kind::from_error_code(code))),
-            #[cfg(all(feature = "asp3", feature = "subprio"))]
+            #[cfg(any(all(feature = "asp3", feature = "subprio"), feature = "fmp3"))]
             abi::E_ILUSE => Some(Self::BadParam(Kind::from_error_code(code))),
             _ => None,
         }

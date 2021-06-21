@@ -7,7 +7,7 @@ use super::{bool_t, ER, ER_BOOL, INTNO, PRI};
 pub const TIPM_ENAALL: PRI = 0;
 
 /// 割込み管理機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn dis_int(intno: INTNO) -> ER;
     pub fn ena_int(intno: INTNO) -> ER;
@@ -19,7 +19,7 @@ extern "C" {
 }
 
 /// CPU例外管理機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn xsns_dpn(p_excinf: *mut u8) -> bool_t;
 }

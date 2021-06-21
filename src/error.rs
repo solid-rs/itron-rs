@@ -140,7 +140,7 @@ impl ErrorCode {
 impl fmt::Debug for ErrorCode {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let name = match () {
-            #[cfg(feature = "asp3")]
+            #[cfg(any(feature = "asp3", feature = "fmp3"))]
             () => match self.get() {
                 abi::E_SYS => Some("E_SYS"),
                 abi::E_NOSPT => Some("E_NOSPT"),

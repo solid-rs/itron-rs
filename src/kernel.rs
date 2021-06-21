@@ -26,8 +26,12 @@ impl ErrorKind for ExitError {
 }
 
 // TODO: rot_rdq
+// TODO: get_pid
+// TODO: mrot_rdq
 // TODO: get_lod
+// TODO: mget_lod
 // TODO: get_nth
+// TODO: mget_nth
 // TODO: loc_cpu
 // TODO: unl_cpu
 // TODO: dis_dsp

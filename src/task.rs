@@ -11,6 +11,8 @@ use crate::{
 // TODO: stp_ovr
 // TODO: ref_ovr
 // TODO: chg_spr
+// TODO: mact_tsk
+// TODO: chg_spr
 // TODO: TA_ACT
 // TODO: TA_NOACTQUE
 // TODO: TA_RTSK
@@ -454,6 +456,8 @@ define_error_kind! {
         /// Bad state.
         ///
         ///  - The task is dormant.
+        ///  - The task is assigned to a processor that is different from the
+        ///    current one (`E_OBJ`, NGKI3481).
         ///
         #[cfg(not(feature = "none"))]
         BadState,
@@ -496,6 +500,8 @@ define_error_kind! {
         /// Bad state.
         ///
         ///  - The task is dormant.
+        ///  - The task is assigned to a processor that is different from the
+        ///    current one (`E_OBJ`, NGKI3481).
         ///
         #[cfg(not(feature = "none"))]
         BadState,
@@ -829,6 +835,8 @@ impl Info {
     // TODO: wupcnt
     // TODO: raster
     // TODO: dister
+    // TODO: prcid
+    // TODO: actprc
 }
 
 /// `slp_tsk`: Put the current task to sleep.

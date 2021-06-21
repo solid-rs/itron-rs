@@ -30,6 +30,9 @@ jobs:
           - { features: "asp3,dcre,subprio" }
           - { features: "asp3,dcre,pi_mutex" }
           - { features: "asp3,dcre,rstr_task,messagebuf,ovrhdr,subprio,pi_mutex" }
+
+          # TOPPERS/FMP3
+          - { features: "fmp3" }
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust toolchain

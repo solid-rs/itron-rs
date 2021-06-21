@@ -8,6 +8,7 @@
 //! <i>This documentation has been built with the following Cargo features:
 // Make sure the commas are inserted at the right places!
 #![cfg_attr(feature = "asp3", doc = "`asp3`")]
+#![cfg_attr(feature = "fmp3", doc = "`fmp3`")]
 #![cfg_attr(feature = "none", doc = "`none`")]
 #![cfg_attr(feature = "dcre", doc = ", `dcre`")]
 #![cfg_attr(feature = "rstr_task", doc = ", `rstr_task`")]

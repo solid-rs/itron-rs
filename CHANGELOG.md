@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Added:** `itron::abi::{*_ovr}` (overrun handlers) and Cargo feature `ovrhdr`
 - **Added:** `itron::abi::chg_spr` (change task subpriority) and Cargo feature `subprio`
 - **Added:** `itron::abi::TA_INHERIT` (priority inheritance mutexes) and Cargo feature `pi_mutex`
+- **Added:** Cargo feature `fmp3`
 
 ## 0.1.0 - 2021-06-15
 

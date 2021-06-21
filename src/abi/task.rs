@@ -115,8 +115,39 @@ pub struct T_RTSK {
     pub dister: bool_t,
 }
 
+/// TOPPERS/FMP3 `T_RTSK`
+#[cfg(feature = "fmp3")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_RTSK {
+    /// タスク状態
+    pub tskstat: STAT,
+    /// タスクの現在優先度
+    pub tskpri: PRI,
+    /// タスクのベース優先度
+    pub tskbpri: PRI,
+    /// 待ち要因
+    pub tskwait: STAT,
+    /// 待ち対象のオブジェクトのID
+    pub wobjid: ID,
+    /// タイムアウトするまでの時間
+    pub lefttmo: TMO,
+    /// 起動要求キューイング数
+    pub actcnt: uint_t,
+    /// 起床要求キューイング数
+    pub wupcnt: uint_t,
+    /// タスク終了要求状態
+    pub raster: bool_t,
+    /// タスク終了禁止状態
+    pub dister: bool_t,
+    /// 割付けプロセッサのID
+    pub prcid: ID,
+    /// 次の起動時の割付けプロセッサのID
+    pub actprc: ID,
+}
+
 /// タスク管理機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn act_tsk(tskid: ID) -> ER;
     pub fn can_act(tskid: ID) -> ER_UINT;
@@ -127,19 +158,26 @@ extern "C" {
     pub fn ref_tsk(tskid: ID, pk_rtsk: *mut T_RTSK) -> ER;
 }
 
+/// タスク管理機能
+#[cfg(feature = "fmp3")]
+extern "C" {
+    pub fn mact_tsk(tskid: ID, prcid: ID) -> ER;
+    pub fn mig_tsk(tskid: ID, prcid: ID) -> ER;
+}
+
 #[cfg(all(feature = "asp3", feature = "dcre"))]
 extern "C" {
     pub fn acre_tsk(pk_ctsk: *const T_CTSK) -> ER_ID;
     pub fn del_tsk(tskid: ID) -> ER;
 }
 
-#[cfg(all(feature = "asp3", feature = "subprio"))]
+#[cfg(any(all(feature = "asp3", feature = "subprio"), feature = "fmp3"))]
 extern "C" {
     pub fn chg_spr(tskid: ID, subpri: uint_t) -> ER;
 }
 
 /// タスク付属同期機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn slp_tsk() -> ER;
     pub fn tslp_tsk(tmout: TMO) -> ER;
@@ -152,7 +190,7 @@ extern "C" {
 }
 
 /// タスク終了機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn ext_tsk() -> ER;
     pub fn ras_ter(tskid: ID) -> ER;

@@ -1,6 +1,6 @@
 use super::{uint_t, ATR, ER, ER_ID, ID, MPF_T, TMO};
 
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RMPF {
@@ -27,7 +27,7 @@ pub struct T_CMPF {
 }
 
 /// メモリプール管理機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn get_mpf(mpfid: ID, p_blk: *mut *mut u8) -> ER;
     pub fn pget_mpf(mpfid: ID, p_blk: *mut *mut u8) -> ER;

@@ -1,4 +1,4 @@
-use super::{uint_t, ATR, ER, ER_ID, FLGPTN, ID, MODE, PRI, RELTIM, TMO};
+use super::{uint_t, ATR, ER, ER_ID, FLGPTN, ID, MODE, PRI, RELTIM, STAT, TMO};
 
 /*
  *  オブジェクト属性
@@ -25,7 +25,17 @@ pub const TWF_ORW: MODE = 0x01;
 /// イベントフラグのAND待ち
 pub const TWF_ANDW: MODE = 0x02;
 
-#[cfg(feature = "asp3")]
+/*
+ *  オブジェクトの状態の定義
+ */
+/// スピンロックが取得されていない状態
+#[cfg(feature = "fmp3")]
+pub const TSPN_UNL: STAT = 0x01;
+/// スピンロックが取得されている状態
+#[cfg(feature = "fmp3")]
+pub const TSPN_LOC: STAT = 0x02;
+
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RSEM {
@@ -35,7 +45,7 @@ pub struct T_RSEM {
     pub semcnt: uint_t,
 }
 
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RFLG {
@@ -45,7 +55,7 @@ pub struct T_RFLG {
     pub flgptn: FLGPTN,
 }
 
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RDTQ {
@@ -57,7 +67,7 @@ pub struct T_RDTQ {
     pub sdtqcnt: uint_t,
 }
 
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RPDQ {
@@ -69,7 +79,7 @@ pub struct T_RPDQ {
     pub spdqcnt: uint_t,
 }
 
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct T_RMTX {
@@ -91,6 +101,14 @@ pub struct T_RMBF {
     pub smbfcnt: uint_t,
     /// メッセージバッファ管理領域中の空き領域のサイズ
     pub fmbfsz: usize,
+}
+
+#[cfg(feature = "fmp3")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_RSPN {
+    /// スピンロックのロック状態
+    pub spnstat: STAT,
 }
 
 #[cfg(all(feature = "asp3", feature = "dcre"))]
@@ -167,7 +185,7 @@ pub struct T_CMBF {
 }
 
 /// 同期・通信機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn sig_sem(semid: ID) -> ER;
     pub fn wai_sem(semid: ID) -> ER;
@@ -215,6 +233,15 @@ extern "C" {
     pub fn unl_mtx(mtxid: ID) -> ER;
     pub fn ini_mtx(mtxid: ID) -> ER;
     pub fn ref_mtx(mtxid: ID, pk_rmtx: *mut T_RMTX) -> ER;
+}
+
+/// 同期・通信機能
+#[cfg(feature = "fmp3")]
+extern "C" {
+    pub fn loc_spn(spnid: ID) -> ER;
+    pub fn unl_spn(spnid: ID) -> ER;
+    pub fn try_spn(spnid: ID) -> ER;
+    pub fn ref_spn(spnid: ID, pk_rspn: *mut T_RSPN) -> ER;
 }
 
 /// 同期・通信機能

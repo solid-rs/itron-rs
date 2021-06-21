@@ -46,6 +46,7 @@ unstable_module! {
     pub mod semaphore;
     pub mod task;
     pub mod wait;
+    // TODO: spinlocks
 
     /// Temporal quantification
     pub mod time {

@@ -1,5 +1,6 @@
 use super::{ER, HRTCNT, ID, RELTIM, STAT, SYSTIM};
 
+/// TOPPERS/ASP3 `T_RCYC`
 #[cfg(feature = "asp3")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -10,6 +11,20 @@ pub struct T_RCYC {
     pub lefttim: RELTIM,
 }
 
+/// TOPPERS/FMP3 `T_RCYC`
+#[cfg(feature = "fmp3")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_RCYC {
+    /// 周期通知の動作状態
+    pub cycstat: STAT,
+    /// 次回通知時刻までの相対時間
+    pub lefttim: RELTIM,
+    /// 割付けプロセッサのID
+    pub prcid: ID,
+}
+
+/// TOPPERS/ASP3 `T_RALM`
 #[cfg(feature = "asp3")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -18,6 +33,19 @@ pub struct T_RALM {
     pub almstat: STAT,
     /// 通知時刻までの相対時間
     pub lefttim: RELTIM,
+}
+
+/// TOPPERS/ASP3 `T_RALM`
+#[cfg(feature = "fmp3")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+pub struct T_RALM {
+    /// アラーム通知の動作状態
+    pub almstat: STAT,
+    /// 通知時刻までの相対時間
+    pub lefttim: RELTIM,
+    /// 割付けプロセッサのID
+    pub prcid: ID,
 }
 
 #[cfg(all(feature = "asp3", feature = "ovrhdr"))]
@@ -31,7 +59,7 @@ pub struct T_ROVR {
 }
 
 /// 時間管理機能
-#[cfg(feature = "asp3")]
+#[cfg(any(feature = "asp3", feature = "fmp3"))]
 extern "C" {
     pub fn set_tim(systim: SYSTIM) -> ER;
     pub fn get_tim(p_systim: *mut SYSTIM) -> ER;
@@ -45,6 +73,13 @@ extern "C" {
     pub fn sta_alm(almid: ID, almtim: RELTIM) -> ER;
     pub fn stp_alm(almid: ID) -> ER;
     pub fn ref_alm(almid: ID, pk_ralm: *mut T_RALM) -> ER;
+}
+
+/// 時間管理機能
+#[cfg(feature = "fmp3")]
+extern "C" {
+    pub fn msta_cyc(cycid: ID, prcid: ID) -> ER;
+    pub fn msta_alm(almid: ID, almtim: RELTIM, prcid: ID) -> ER;
 }
 
 /// 時間管理機能
