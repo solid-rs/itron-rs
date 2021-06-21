@@ -10,6 +10,7 @@ readme = "src/lib.md"
 description = "Interface to operating systems based on μITRON and its derivatives."
 categories = ["embedded", "no-std", "external-ffi-bindings", "os"]
 repository = "https://github.com/kawadakk/itron-rs"
+keywords = ["rtos", "toppers", "kernel"]
 
 [features]
 default = []
