@@ -1476,6 +1476,7 @@ mod owned {
     ///
     /// Its generic parameters are an implementation detail.
     #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+    #[must_use = "`Builder` creates nothing unless you call `.finish()`"]
     pub struct Builder<Start, Stack, InitialPriority> {
         start: Start,
         stack: Stack,

@@ -599,6 +599,7 @@ mod owned {
     ///
     /// Its generic parameters are an implementation detail.
     #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+    #[must_use = "`Builder` creates nothing unless you call `.finish()`"]
     pub struct Builder {
         #[cfg(not(feature = "none"))]
         raw: abi::T_CMTX,
