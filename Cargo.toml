@@ -55,8 +55,7 @@ pi_mutex = []
 
 
 [package.metadata.docs.rs]
-# arbitrarily choose ASP3.
-features = ["doc_cfg", "nightly", "unstable", "asp3", "dcre", "messagebuf",
-    "ovrhdr", "subprio", "rstr_task", "pi_mutex"]
+# choose `none` to maximize the wrapper generation.
+features = ["doc_cfg", "nightly", "unstable", "none"]
 # only build the default target
 targets = []

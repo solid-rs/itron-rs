@@ -1,0 +1,64 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-docs:
+    name: Build and deploy docs
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+
+      # ------------------------------------------------------------------------
+
+      # `cargo doc` preserves all previously-emitted crates even if they do not
+      # exist anymore. By exploiting this behavior, we generate a documentation
+      # for each kernel.
+      - name: Rename the crate
+        run: |
+          sed -e 's/name = .*/name = "itron_asp3"/' -i Cargo.toml
+
+      - name: Build Documentation for TOPPERS/ASP3
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: -p itron_asp3 --features nightly,unstable,asp3,dcre,rstr_task,messagebuf,ovrhdr,subprio,pi_mutex
+
+
+      - name: Rename the crate
+        run: |
+          sed -e 's/name = .*/name = "itron_fmp3"/' -i Cargo.toml
+
+      - name: Build Documentation for TOPPERS/FMP3
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: -p itron_fmp3 --features nightly,unstable,fmp3
+
+      # ------------------------------------------------------------------------
+
+      - name: Generate badge
+        run: |
+          rev=`git show-ref --head HEAD | cut -b 1-7`
+          wget -nv -O target/doc/badge.svg "https://img.shields.io/badge/per--kernel%20docs-$rev-ok"
+
+      - name: Collect output
+        run: |
+          mkdir output
+          mv target/doc output
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages
+          folder: output
+          single-commit: true
+
