@@ -1460,7 +1460,7 @@ mod owned {
         }
 
         /// An instance of [`IntoProcessorSet`] specifying all processors.
-        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+        #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
         pub struct AllProcessors;
 
         impl IntoProcessorSet for AllProcessors {
