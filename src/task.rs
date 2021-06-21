@@ -48,6 +48,50 @@ impl ErrorKind for ActivateError {
 }
 
 define_error_kind! {
+    /// Error type for [`TaskRef::activate_on`].
+    #[cfg(any(feature = "none", feature = "fmp3"))]
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+    pub enum ActivateOnError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        /// The task is a restricted task.
+        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
+        NotSupported,
+        #[cfg(any())]
+        AccessDenied,
+        #[cfg(not(feature = "none"))]
+        QueueOverflow,
+        /// The class the task belongs to does not permit assigning tasks to the
+        /// specified processor.
+        #[cfg(not(feature = "none"))]
+        BadParam,
+    }
+}
+
+#[cfg(any(feature = "none", feature = "fmp3"))]
+impl ErrorKind for ActivateOnError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
+            abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_QOVR => Some(Self::QueueOverflow(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_PAR => Some(Self::BadParam(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
     /// Error type for [`TaskRef::cancel_activate_all`].
     pub enum CancelActivateAllError {
         #[cfg(not(feature = "none"))]
@@ -1036,6 +1080,26 @@ impl TaskRef<'_> {
         }
     }
 
+    /// `mact_tsk`: Pend an activation request for the task, assigning it to
+    /// the specified processor.
+    #[inline]
+    #[doc(alias = "mact_tsk")]
+    #[cfg(any(feature = "none", feature = "fmp3"))]
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3"))))]
+    pub fn activate_on(
+        self,
+        processor: crate::processor::Processor,
+    ) -> Result<(), Error<ActivateOnError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::mact_tsk(self.as_raw(), processor.as_raw()))?;
+                Ok(())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
     /// `can_act`: Cancel any pending activation requests for the task.
     /// Returns the number of cancelled requests.
     #[inline]
