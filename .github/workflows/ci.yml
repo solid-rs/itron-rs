@@ -14,31 +14,38 @@ jobs:
       matrix:
         include:
           - { features: "none" }
+          - { features: "unstable" }
+          - { features: "nightly" }
+          - { features: "unstable,nightly" }
 
           # TOPPERS/ASP3
           - { features: "asp3" }
-          - { features: "asp3,dcre" }
-          - { features: "asp3,rstr_task" }
-          - { features: "asp3,messagebuf" }
-          - { features: "asp3,ovrhdr" }
-          - { features: "asp3,subprio" }
+          - { features: "unstable,nightly,asp3" }
+          - { features: "unstable,nightly,asp3,dcre" }
+          - { features: "unstable,nightly,asp3,rstr_task" }
+          - { features: "unstable,nightly,asp3,messagebuf" }
+          - { features: "unstable,nightly,asp3,ovrhdr" }
+          - { features: "unstable,nightly,asp3,subprio" }
 
           # SOLID/ASP3
           - { features: "solid_asp3" }
-          - { features: "solid_asp3,messagebuf" }
-          - { features: "solid_asp3,pi_mutex" }
-          - { features: "solid_asp3,messagebuf,pi_mutex" }
-          - { features: "solid_asp3,dcre" }
-          - { features: "solid_asp3,dcre,messagebuf" }
-          - { features: "solid_asp3,dcre,pi_mutex" }
-          - { features: "solid_asp3,dcre,messagebuf,pi_mutex" }
+          - { features: "unstable,nightly,solid_asp3" }
+          - { features: "unstable,nightly,solid_asp3,messagebuf" }
+          - { features: "unstable,nightly,solid_asp3,pi_mutex" }
+          - { features: "unstable,nightly,solid_asp3,messagebuf,pi_mutex" }
+          - { features: "unstable,nightly,solid_asp3,dcre" }
+          - { features: "unstable,nightly,solid_asp3,dcre,messagebuf" }
+          - { features: "unstable,nightly,solid_asp3,dcre,pi_mutex" }
+          - { features: "unstable,nightly,solid_asp3,dcre,messagebuf,pi_mutex" }
 
           # TOPPERS/FMP3
           - { features: "fmp3" }
+          - { features: "unstable,nightly,fmp3" }
 
           # SOLID/FMP3
           - { features: "solid_fmp3" }
-          - { features: "solid_fmp3,dcre" }
+          - { features: "unstable,nightly,solid_fmp3" }
+          - { features: "unstable,nightly,solid_fmp3,dcre" }
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust toolchain
