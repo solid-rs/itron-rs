@@ -43,6 +43,8 @@ unstable_module! {
     pub mod messagebuffer;
     pub mod mutex;
     pub mod prioritydataqueue;
+    #[cfg(any(feature = "fmp3", feature = "none"))]
+    pub mod processor;
     pub mod semaphore;
     pub mod task;
     pub mod wait;
