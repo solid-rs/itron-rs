@@ -4,6 +4,14 @@
 #![doc = include_str!("lib.md")]
 #![deny(unsafe_op_in_unsafe_fn)]
 #![allow(clippy::match_single_binding)] // the `cfg` matching pattern
+#![warn(clippy::doc_markdown)]
+#![warn(clippy::enum_glob_use)]
+#![warn(clippy::if_not_else)]
+#![warn(rust_2018_idioms)]
+#![cfg_attr(feature = "none", allow(unused_imports))]
+#![cfg_attr(feature = "none", allow(unreachable_code))]
+#![cfg_attr(feature = "none", allow(unused_variables))]
+#![cfg_attr(feature = "none", allow(dead_code))]
 
 /// Changelog (`CHANGELOG.md`)
 ///
