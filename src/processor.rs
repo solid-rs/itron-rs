@@ -67,13 +67,13 @@ impl Processor {
 /// `get_pid`: Get the current processor's ID.
 #[inline]
 #[doc(alias = "get_pid")]
-pub fn current() -> Result<Option<abi::NonNullID>, Error<CurrentIdError>> {
+pub fn current() -> Result<abi::NonNullID, Error<CurrentIdError>> {
     match () {
         #[cfg(not(feature = "none"))]
         () => unsafe {
             let mut out = MaybeUninit::uninit();
             Error::err_if_negative(abi::get_pid(out.as_mut_ptr()))?;
-            Ok(abi::NonNullID::new(out.assume_init()))
+            Ok(abi::NonNullID::new_unchecked(out.assume_init()))
         },
         #[cfg(feature = "none")]
         () => unimplemented!(),
