@@ -49,3 +49,7 @@ It's allowed to [get] an object ID wrapper for the current task of the current p
 ### Kernel Assumed to be Operational
 
 **It's assumed that this crate's functions are called while the kernel is operational** (i.e., `sns_ker` returns `FALSE`). It's up to application programmers to make sure they are not called inside initialization or termination routines.
+
+### Restricted Tasks
+
+If restricted tasks are not enabled by the `rstr_task` feature, **the caller is assumed to be a non-restricted task.** When called from a restricted task, blocking functions can return `E_NOSPT` , which is not handled and will cause a UB if the `rstr_task` feature is not enabled.
