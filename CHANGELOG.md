@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.1.3] - 2021-06-23
 
 - **Added:** `itron::abi::E_OK`
 - **Added:** `itron::dataqueue::Dataqueue[Ref]`
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial release.
 
-[Unreleased]: https://github.com/kawadakk/itron-rs/compare/0.1.2...main
+[Unreleased]: https://github.com/kawadakk/itron-rs/compare/0.1.3...main
+[0.1.3]: https://github.com/kawadakk/itron-rs/compare/0.1.2...0.1.3
 [0.1.2]: https://github.com/kawadakk/itron-rs/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/kawadakk/itron-rs/compare/0.1.0...0.1.1
