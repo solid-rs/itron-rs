@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 - **Added:** `itron::abi::E_OK`
+- **Added:** `itron::dataqueue::Dataqueue[Ref]`
 - **Changed:** `itron::processor::current` now returns `Result<Processor, _>` instead of `Result<Option<abi::NonNullID>, _>`.
 
 ## [0.1.2] - 2021-06-21
