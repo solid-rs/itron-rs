@@ -1505,7 +1505,7 @@ mod owned {
         /// let captured_variable = 42u16;
         /// let task = Task::build()
         ///     .start(move || { let _ = captured_variable; })
-        ///     .stack(4096)
+        ///     .stack_size(4096)
         ///     .initial_priority(4)
         ///     .finish()
         ///     .expect("failed to create a task");
@@ -1580,7 +1580,7 @@ mod owned {
         /// (**Mandatory**) Specify to use an automatically allocated stack
         /// region of the specified size.
         #[inline]
-        pub fn stack(self, size: usize) -> Builder<Start, (), InitialPriority> {
+        pub fn stack_size(self, size: usize) -> Builder<Start, (), InitialPriority> {
             Builder {
                 start: self.start,
                 stack: (),
@@ -1647,7 +1647,7 @@ mod owned {
         /// const P4: Processor = Processor::from_raw(4).unwrap();
         /// let task = Task::build()
         ///     .start(move || {})
-        ///     .stack(4096)
+        ///     .stack_size(4096)
         ///     .initial_priority(4)
         ///     .initial_processor(P3)
         ///     .processor_affinity([P1, P3, P4])
