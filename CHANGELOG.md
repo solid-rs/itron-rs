@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - **Changed:** `itron::task::Builder::{stack → stack_size}`
 - **Added:** `itron::abi::{acre_cyc, acre_alm}`
+- **Added:** `itron::abi::acre_mpf` when `cfg(all(feature = "solid_asp3", feature = "dcre"))`
 
 ## [0.1.3] - 2021-06-23
 

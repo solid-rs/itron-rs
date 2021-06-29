@@ -54,6 +54,7 @@ extern "C" {
 /// メモリプール管理機能
 #[cfg(any(
     all(feature = "asp3", feature = "dcre"),
+    all(feature = "solid_asp3", feature = "dcre"),
     all(feature = "solid_fmp3", feature = "dcre")
 ))]
 extern "C" {
