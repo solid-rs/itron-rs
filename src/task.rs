@@ -11,7 +11,6 @@ use crate::{
 // TODO: stp_ovr
 // TODO: ref_ovr
 // TODO: chg_spr
-// TODO: mact_tsk
 // TODO: chg_spr
 // TODO: TA_NOACTQUE
 // TODO: TA_RTSK
@@ -188,6 +187,52 @@ impl ErrorKind for PriorityError {
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_OBJ => Some(Self::BadState(Kind::from_error_code(code))),
+            #[cfg(any())]
+            abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
+            _ => None,
+        }
+    }
+}
+
+define_error_kind! {
+    /// Error type for [`TaskRef::migrate`].
+    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))))]
+    pub enum MigrateError {
+        #[cfg(not(feature = "none"))]
+        BadContext,
+        #[cfg(not(feature = "none"))]
+        BadId,
+        /// Bad parameter.
+        ///
+        ///  - The task is a restricted task, for which migration is
+        ///    not supported (`E_NOSPT`, NGKI1186).
+        ///
+        ///  - The class the task belongs to does not permit assigning tasks to
+        ///    the specified processor (`E_PAR`, NGKI1160).
+        ///
+        ///  - The task belongs to a processs that is different from the calling
+        ///    processor (`E_OBJ`, NGK1157).
+        ///
+        #[cfg(not(feature = "none"))]
+        BadParam,
+        #[cfg(any())]
+        AccessDenied,
+    }
+}
+
+#[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
+impl ErrorKind for MigrateError {
+    fn from_error_code(code: ErrorCode) -> Option<Self> {
+        match code.get() {
+            #[cfg(not(feature = "none"))]
+            abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
+            #[cfg(not(feature = "none"))]
+            abi::E_PAR | abi::E_NOSPT | abi::E_OBJ => {
+                Some(Self::BadParam(Kind::from_error_code(code)))
+            }
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
             _ => None,
@@ -1147,6 +1192,28 @@ impl TaskRef<'_> {
                 let mut pri = MaybeUninit::uninit();
                 Error::err_if_negative(abi::get_pri(self.as_raw(), pri.as_mut_ptr()))?;
                 Ok(pri.assume_init())
+            },
+            #[cfg(feature = "none")]
+            () => unimplemented!(),
+        }
+    }
+
+    /// `mig_tsk`: Change the task's assigned processor.
+    #[inline]
+    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
+    #[cfg_attr(
+        feature = "doc_cfg",
+        doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3")))
+    )]
+    pub fn migrate(
+        self,
+        processor: crate::processor::Processor,
+    ) -> Result<(), Error<MigrateError>> {
+        match () {
+            #[cfg(not(feature = "none"))]
+            () => unsafe {
+                Error::err_if_negative(abi::mig_tsk(self.as_raw(), processor.as_raw()))?;
+                Ok(())
             },
             #[cfg(feature = "none")]
             () => unimplemented!(),
