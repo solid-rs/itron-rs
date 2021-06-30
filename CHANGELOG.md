@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Added:** `itron::abi::{acre_cyc, acre_alm, acre_isr}`
 - **Added:** `itron::abi::acre_mpf` when `cfg(all(feature = "solid_asp3", feature = "dcre"))`
 - **Added:** `itron::abi::exd_tsk`
+- **Added:** `itron::task::Builder::finish_and_activate`
 
 ## [0.1.3] - 2021-06-23
 

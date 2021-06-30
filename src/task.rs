@@ -13,7 +13,6 @@ use crate::{
 // TODO: chg_spr
 // TODO: mact_tsk
 // TODO: chg_spr
-// TODO: TA_ACT
 // TODO: TA_NOACTQUE
 // TODO: TA_RTSK
 
@@ -1507,10 +1506,10 @@ mod owned {
         ///     .start(move || { let _ = captured_variable; })
         ///     .stack_size(4096)
         ///     .initial_priority(4)
-        ///     .finish()
+        ///     .finish_and_activate()
         ///     .expect("failed to create a task");
         ///
-        /// task.as_ref().activate().expect("failed to activate the created task");
+        /// task.as_ref().wake().expect("failed to send a wake up request to the created task");
         ///
         /// // The created task might be still active, so if we just let `task`
         /// // go out of scope, its destructor will panic. `Task::leak` consumes
@@ -1690,6 +1689,18 @@ mod owned {
                 #[cfg(feature = "none")]
                 () => unimplemented!(),
             }
+        }
+
+        /// Create and activate a task using the specified parameters.
+        #[allow(unused_mut)]
+        #[doc(alias = "TA_ACT")]
+        pub fn finish_and_activate(mut self) -> Result<Task, Error<BuildError>> {
+            #[cfg(not(feature = "none"))]
+            {
+                self.raw.tskatr |= abi::TA_ACT;
+            }
+
+            self.finish()
         }
     }
 
