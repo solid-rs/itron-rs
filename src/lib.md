@@ -19,9 +19,13 @@ implementation. The following ones are supported:
      - Additional features supported: `dcre` (dynamic object creation), `systim_local` (processor-local kernel ticks), `exd_tsk` (exit and delete the calling task)
  - `none` (default): Stub implementation that exposes all functions but always panics
 
-It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct). Specifying unsupported features for a given kernel might result in a compiler or linker error.
+It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct). Specifying unsupported features for a given kernel might result in a compiler or linker error¹.
 
 Items are `cfg`-gated according to the selected kernel's supported feature set so that the uses of non-existent features are detected at compile time.
+
+<sub>
+¹ TOPPERS kernels' extensions are mutually exclusive, but building the crate documentation should still succeed even if all of them are specified.
+</sub>
 
 [SOLID]: https://solid.kmckk.com/SOLID/
 

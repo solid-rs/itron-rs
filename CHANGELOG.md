@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Added:** `itron::abi::exd_tsk`
 - **Added:** `itron::task::Builder::finish_and_activate`
 - **Added:** `itron::memorypool::MemoryPool[Ref]`
+- **Added:** `itron::messagebuffer::MessageBuffer[Ref]`
 
 ## [0.1.3] - 2021-06-23
 
