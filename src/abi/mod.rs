@@ -18,6 +18,7 @@
 #![cfg_attr(feature = "ovrhdr", doc = ", `ovrhdr`")]
 #![cfg_attr(feature = "subprio", doc = ", `subprio`")]
 #![cfg_attr(feature = "pi_mutex", doc = ", `pi_mutex`")]
+#![cfg_attr(feature = "systim_local", doc = ", `systim_local`")]
 //! </i>
 #![allow(non_camel_case_types)]
 #![allow(unused_imports)]

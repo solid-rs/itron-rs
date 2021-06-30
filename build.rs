@@ -23,5 +23,6 @@ fn main() {
         println!("cargo:rustc-cfg=feature=\"ovrhdr\"");
         println!("cargo:rustc-cfg=feature=\"subprio\"");
         println!("cargo:rustc-cfg=feature=\"pi_mutex\"");
+        println!("cargo:rustc-cfg=feature=\"systim_local\"");
     }
 }

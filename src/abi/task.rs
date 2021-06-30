@@ -1,5 +1,8 @@
 use super::{bool_t, uint_t, ATR, ER, ER_ID, ER_UINT, EXINF, ID, PRI, RELTIM, STAT, TMO};
 
+/*
+ *  処理単位の型定義
+ */
 pub type TASK = Option<unsafe extern "C" fn(EXINF)>;
 
 /*

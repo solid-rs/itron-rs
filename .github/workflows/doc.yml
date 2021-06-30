@@ -48,7 +48,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_fmp3 --features nightly,unstable,fmp3
+          args: -p itron_fmp3 --features nightly,unstable,fmp3,systim_local
 
       - name: Rename the crate
         run: |
@@ -57,7 +57,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_solid_fmp3 --features nightly,unstable,solid_fmp3,dcre
+          args: -p itron_solid_fmp3 --features nightly,unstable,solid_fmp3,dcre,systim_local
 
       # ------------------------------------------------------------------------
 

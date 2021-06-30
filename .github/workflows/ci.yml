@@ -42,11 +42,14 @@ jobs:
           # TOPPERS/FMP3
           - { features: "fmp3" }
           - { features: "unstable,nightly,fmp3" }
+          - { features: "unstable,nightly,fmp3,systim_local" }
 
           # SOLID/FMP3
           - { features: "solid_fmp3" }
           - { features: "unstable,nightly,solid_fmp3" }
           - { features: "unstable,nightly,solid_fmp3,dcre" }
+          - { features: "unstable,nightly,solid_fmp3,systim_local" }
+          - { features: "unstable,nightly,solid_fmp3,dcre,systim_local" }
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust toolchain

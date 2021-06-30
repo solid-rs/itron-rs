@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 - **Changed:** `itron::task::Builder::{stack → stack_size}`
+- **Added:** `itron::abi::{acre_cyc, acre_alm}`
 
 ## [0.1.3] - 2021-06-23
 
