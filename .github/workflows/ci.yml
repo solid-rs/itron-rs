@@ -34,10 +34,12 @@ jobs:
           - { features: "unstable,nightly,solid_asp3,messagebuf" }
           - { features: "unstable,nightly,solid_asp3,pi_mutex" }
           - { features: "unstable,nightly,solid_asp3,messagebuf,pi_mutex" }
+          - { features: "unstable,nightly,solid_asp3,messagebuf,pi_mutex,exd_tsk" }
           - { features: "unstable,nightly,solid_asp3,dcre" }
           - { features: "unstable,nightly,solid_asp3,dcre,messagebuf" }
           - { features: "unstable,nightly,solid_asp3,dcre,pi_mutex" }
           - { features: "unstable,nightly,solid_asp3,dcre,messagebuf,pi_mutex" }
+          - { features: "unstable,nightly,solid_asp3,dcre,messagebuf,pi_mutex,exd_tsk" }
 
           # TOPPERS/FMP3
           - { features: "fmp3" }
@@ -49,7 +51,8 @@ jobs:
           - { features: "unstable,nightly,solid_fmp3" }
           - { features: "unstable,nightly,solid_fmp3,dcre" }
           - { features: "unstable,nightly,solid_fmp3,systim_local" }
-          - { features: "unstable,nightly,solid_fmp3,dcre,systim_local" }
+          - { features: "unstable,nightly,solid_fmp3,exd_tsk" }
+          - { features: "unstable,nightly,solid_fmp3,dcre,systim_local,exd_tsk" }
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust toolchain

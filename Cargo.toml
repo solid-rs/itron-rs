@@ -24,7 +24,7 @@ unstable = []
 #  - Be sure to synchronize this with the "list of enabled features"
 #    in `crate::abi`.
 none = ["dcre", "rstr_task", "messagebuf", "ovrhdr", "subprio",
-    "pi_mutex", "systim_local"]
+    "pi_mutex", "systim_local", "exd_tsk"]
 asp3 = []
 solid_asp3 = []
 fmp3 = []
@@ -55,6 +55,9 @@ pi_mutex = []
 
 # Processor-local kernel ticks
 systim_local = []
+
+# `exd_tsk`
+exd_tsk = []
 
 [dependencies]
 

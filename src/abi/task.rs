@@ -257,3 +257,9 @@ extern "C" {
     pub fn sns_ter() -> bool_t;
     pub fn ter_tsk(tskid: ID) -> ER;
 }
+
+/// 自タスクの終了＆削除
+#[cfg(any(feature = "solid_asp3", feature = "solid_fmp3"))]
+extern "C" {
+    pub fn exd_tsk() -> ER;
+}

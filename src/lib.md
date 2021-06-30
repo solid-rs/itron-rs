@@ -12,11 +12,11 @@ implementation. The following ones are supported:
  - `asp3`: [TOPPERS/ASP3](https://toppers.jp/asp3-kernel.html)
      - Additional features supported: `dcre` (dynamic object creation), `rstr_task` (restricted tasks), `messagebuf` (message buffers), `ovrhdr` (overrun handlers), `subprio` (task subpriorities)
  - `solid_asp3`: TOPPERS/ASP3 with [SOLID] extensions
-     - Additional features supported: `dcre` (dynamic object creation), `messagebuf` (message buffers),  `pi_mutex` (priority inheritance)
+     - Additional features supported: `dcre` (dynamic object creation), `messagebuf` (message buffers),  `pi_mutex` (priority inheritance), `exd_tsk` (exit and delete the calling task)
  - `fmp3`: [TOPPERS/FMP3](https://toppers.jp/fmp3-kernel.html)
      - Additional features supported: `systim_local` (processor-local kernel ticks)
  - `solid_fmp3`: TOPPERS/FMP3 with [SOLID] extensions
-     - Additional features supported: `dcre` (dynamic object creation), `systim_local` (processor-local kernel ticks)
+     - Additional features supported: `dcre` (dynamic object creation), `systim_local` (processor-local kernel ticks), `exd_tsk` (exit and delete the calling task)
  - `none` (default): Stub implementation that exposes all functions but always panics
 
 It's an error to enable more than one of these features. It's unsafe to specify an incorrect kernel because the ABIs differ between kernels. This crate assumes it's inherently safe to call the specified kernel's API functions (provided the usage is correct). Specifying unsupported features for a given kernel might result in a compiler or linker error.

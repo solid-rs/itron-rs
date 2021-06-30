@@ -19,6 +19,7 @@
 #![cfg_attr(feature = "subprio", doc = ", `subprio`")]
 #![cfg_attr(feature = "pi_mutex", doc = ", `pi_mutex`")]
 #![cfg_attr(feature = "systim_local", doc = ", `systim_local`")]
+#![cfg_attr(feature = "exd_tsk", doc = ", `exd_tsk`")]
 //! </i>
 #![allow(non_camel_case_types)]
 #![allow(unused_imports)]
