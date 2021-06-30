@@ -4,6 +4,7 @@ use core::{fmt, marker::PhantomData, mem::MaybeUninit};
 use crate::{
     abi,
     error::{Error, ErrorCode, ErrorKind, Kind},
+    processor::Processor,
     time::{Duration, Timeout},
 };
 
@@ -45,17 +46,16 @@ impl ErrorKind for ActivateError {
     }
 }
 
+// Note: `activate_on` reduces to `activate` on a uniprocessor kernel
 define_error_kind! {
     /// Error type for [`TaskRef::activate_on`].
-    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
-    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))))]
     pub enum ActivateOnError {
         #[cfg(not(feature = "none"))]
         BadContext,
         #[cfg(not(feature = "none"))]
         BadId,
         /// The task is a restricted task.
-        #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
+        #[cfg(all(feature = "rstr_task", any()))]
         NotSupported,
         #[cfg(any())]
         AccessDenied,
@@ -63,12 +63,11 @@ define_error_kind! {
         QueueOverflow,
         /// The class the task belongs to does not permit assigning tasks to the
         /// specified processor.
-        #[cfg(not(feature = "none"))]
+        #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
         BadParam,
     }
 }
 
-#[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
 impl ErrorKind for ActivateOnError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
@@ -76,13 +75,13 @@ impl ErrorKind for ActivateOnError {
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
-            #[cfg(all(not(feature = "none"), feature = "rstr_task"))]
+            #[cfg(all(feature = "rstr_task", any()))]
             abi::E_NOSPT => Some(Self::NotSupported(Kind::from_error_code(code))),
             #[cfg(any())]
             abi::E_OACV => Some(Self::AccessDenied(Kind::from_error_code(code))),
             #[cfg(not(feature = "none"))]
             abi::E_QOVR => Some(Self::QueueOverflow(Kind::from_error_code(code))),
-            #[cfg(not(feature = "none"))]
+            #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
             abi::E_PAR => Some(Self::BadParam(Kind::from_error_code(code))),
             _ => None,
         }
@@ -194,14 +193,13 @@ impl ErrorKind for PriorityError {
     }
 }
 
+// Note: `migrate` is no-op on a uniprocessor kernel
 define_error_kind! {
     /// Error type for [`TaskRef::migrate`].
-    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
-    #[cfg_attr(feature = "doc_cfg", doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))))]
     pub enum MigrateError {
-        #[cfg(not(feature = "none"))]
+        #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
         BadContext,
-        #[cfg(not(feature = "none"))]
+        #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
         BadId,
         /// Bad parameter.
         ///
@@ -214,7 +212,7 @@ define_error_kind! {
         ///  - The task belongs to a processs that is different from the calling
         ///    processor (`E_OBJ`, NGK1157).
         ///
-        #[cfg(not(feature = "none"))]
+        #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
         BadParam,
         #[cfg(any())]
         AccessDenied,
@@ -225,11 +223,11 @@ define_error_kind! {
 impl ErrorKind for MigrateError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
-            #[cfg(not(feature = "none"))]
+            #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
-            #[cfg(not(feature = "none"))]
+            #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
             abi::E_ID | abi::E_NOEXS => Some(Self::BadId(Kind::from_error_code(code))),
-            #[cfg(not(feature = "none"))]
+            #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
             abi::E_PAR | abi::E_NOSPT | abi::E_OBJ => {
                 Some(Self::BadParam(Kind::from_error_code(code)))
             }
@@ -1132,21 +1130,19 @@ impl TaskRef<'_> {
     /// the specified processor.
     #[inline]
     #[doc(alias = "mact_tsk")]
-    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
-    #[cfg_attr(
-        feature = "doc_cfg",
-        doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3")))
-    )]
-    pub fn activate_on(
-        self,
-        processor: crate::processor::Processor,
-    ) -> Result<(), Error<ActivateOnError>> {
+    pub fn activate_on(self, processor: Processor) -> Result<(), Error<ActivateOnError>> {
         match () {
-            #[cfg(not(feature = "none"))]
+            #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
             () => unsafe {
                 Error::err_if_negative(abi::mact_tsk(self.as_raw(), processor.as_raw()))?;
                 Ok(())
             },
+            #[cfg(not(any(feature = "none", feature = "fmp3", feature = "solid_fmp3")))]
+            () => {
+                let Processor::UNIPROCESSOR = processor;
+                self.activate()
+                    .map_err(|e| unsafe { Error::new_unchecked(e.code()) })
+            }
             #[cfg(feature = "none")]
             () => unimplemented!(),
         }
@@ -1200,21 +1196,19 @@ impl TaskRef<'_> {
 
     /// `mig_tsk`: Change the task's assigned processor.
     #[inline]
-    #[cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3"))]
-    #[cfg_attr(
-        feature = "doc_cfg",
-        doc(cfg(any(feature = "none", feature = "fmp3", feature = "solid_fmp3")))
-    )]
-    pub fn migrate(
-        self,
-        processor: crate::processor::Processor,
-    ) -> Result<(), Error<MigrateError>> {
+    #[doc(alias = "mig_tsk")]
+    pub fn migrate(self, processor: Processor) -> Result<(), Error<MigrateError>> {
         match () {
-            #[cfg(not(feature = "none"))]
+            #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
             () => unsafe {
                 Error::err_if_negative(abi::mig_tsk(self.as_raw(), processor.as_raw()))?;
                 Ok(())
             },
+            #[cfg(not(any(feature = "none", feature = "fmp3", feature = "solid_fmp3")))]
+            () => {
+                let Processor::UNIPROCESSOR = processor;
+                Ok(())
+            }
             #[cfg(feature = "none")]
             () => unimplemented!(),
         }
@@ -1474,12 +1468,15 @@ pub use self::owned::*;
 mod owned {
     use super::*;
 
-    #[cfg(any(feature = "none", feature = "solid_fmp3"))]
+    /// An instance of [`IntoProcessorSet`] specifying all processors.
+    #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+    pub struct AllProcessors;
+
     pub use self::processor_set::*;
 
-    #[cfg(any(feature = "none", feature = "solid_fmp3"))]
+    #[cfg(feature = "solid_fmp3")]
     mod processor_set {
-        use crate::{abi, processor::Processor};
+        use super::*;
         use core::convert::TryFrom;
 
         /// The trait implemented by types that can be passed to
@@ -1490,19 +1487,6 @@ mod owned {
         pub trait IntoProcessorSet: private::Sealed + Sized {
             #[doc(hidden)]
             fn into_uint_t(self) -> abi::uint_t;
-        }
-
-        /// Implements [the sealed trait pattern (C-SEALED)].
-        ///
-        /// [the sealed trait pattern (C-SEALED)]: https://rust-lang.github.io/api-guidelines/future-proofing.html#sealed-traits-protect-against-downstream-implementations-c-sealed
-        mod private {
-            use super::*;
-
-            pub trait Sealed {}
-
-            impl<T: IntoIterator<Item = Processor>> Sealed for T {}
-            impl Sealed for Processor {}
-            impl Sealed for AllProcessors {}
         }
 
         impl<T: IntoIterator<Item = Processor>> IntoProcessorSet for T {
@@ -1525,10 +1509,6 @@ mod owned {
             }
         }
 
-        /// An instance of [`IntoProcessorSet`] specifying all processors.
-        #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
-        pub struct AllProcessors;
-
         impl IntoProcessorSet for AllProcessors {
             #[doc(hidden)]
             #[inline]
@@ -1536,6 +1516,57 @@ mod owned {
                 abi::uint_t::MAX
             }
         }
+    }
+
+    #[cfg(not(feature = "solid_fmp3"))]
+    mod processor_set {
+        use super::*;
+
+        /// The trait implemented by types that can be passed to
+        /// [`crate::task::Builder::processor_affinity`]. This trait is [sealed].
+        ///
+        /// [sealed]: https://rust-lang.github.io/api-guidelines/future-proofing.html#sealed-traits-protect-against-downstream-implementations-c-sealed
+        #[cfg_attr(feature = "doc_cfg", doc(cfg(feature = "dcre")))]
+        pub trait IntoProcessorSet: private::Sealed + Sized {
+            #[doc(hidden)]
+            fn assert_non_empty(self);
+        }
+
+        impl<T: IntoIterator<Item = Processor>> IntoProcessorSet for T {
+            #[doc(hidden)]
+            #[inline]
+            fn assert_non_empty(self) {
+                assert!(
+                    self.into_iter().next().is_some(),
+                    "affinity processor set is empty"
+                );
+            }
+        }
+
+        impl IntoProcessorSet for Processor {
+            #[doc(hidden)]
+            #[inline]
+            fn assert_non_empty(self) {}
+        }
+
+        impl IntoProcessorSet for AllProcessors {
+            #[doc(hidden)]
+            #[inline]
+            fn assert_non_empty(self) {}
+        }
+    }
+
+    /// Implements [the sealed trait pattern (C-SEALED)].
+    ///
+    /// [the sealed trait pattern (C-SEALED)]: https://rust-lang.github.io/api-guidelines/future-proofing.html#sealed-traits-protect-against-downstream-implementations-c-sealed
+    mod private {
+        use super::*;
+
+        pub trait Sealed {}
+
+        impl<T: IntoIterator<Item = Processor>> Sealed for T {}
+        impl Sealed for Processor {}
+        impl Sealed for AllProcessors {}
     }
 
     /// The builder type for [tasks](Task). Created by [`Task::build`].
@@ -1680,15 +1711,12 @@ mod owned {
         /// Specify the task's initial assigned processor. Defaults to the
         /// current processor when unspecified.
         #[inline]
-        #[cfg(any(feature = "none", feature = "solid_fmp3"))]
-        #[cfg_attr(
-            feature = "doc_cfg",
-            doc(cfg(any(feature = "none", feature = "solid_fmp3")))
-        )]
-        pub fn initial_processor(self, value: crate::processor::Processor) -> Self {
+        pub fn initial_processor(self, value: Processor) -> Self {
+            #[cfg(not(feature = "solid_fmp3"))]
+            let Processor::UNIPROCESSOR = value;
             Builder {
                 assign_to_current_procesor: false,
-                #[cfg(not(feature = "none"))]
+                #[cfg(feature = "solid_fmp3")]
                 raw: abi::T_CTSK {
                     iprcid: value.as_raw(),
                     ..self.raw
@@ -1700,34 +1728,35 @@ mod owned {
         /// Specify the task's assignable processsor set. Defaults to all
         /// processors when unspecified.
         ///
-        /// This function might panic if an invalid processor ID is specified.
+        /// This function might panic if an invalid processor ID is specified
+        /// or the set is empty.
         ///
         /// # Examples
         ///
         /// ```rust,no_run
         /// #![feature(const_option)]
         /// use itron::{task::Task, processor::Processor};
-        /// const P1: Processor = Processor::from_raw(1).unwrap();
-        /// const P3: Processor = Processor::from_raw(3).unwrap();
-        /// const P4: Processor = Processor::from_raw(4).unwrap();
+        /// let processor = itron::processor::current().unwrap();
         /// let task = Task::build()
         ///     .start(move || {})
         ///     .stack_size(4096)
         ///     .initial_priority(4)
-        ///     .initial_processor(P3)
-        ///     .processor_affinity([P1, P3, P4])
+        ///     .initial_processor(processor)
+        ///     .processor_affinity([processor])
         ///     .finish()
         ///     .expect("failed to create a task");
         /// ```
         #[inline]
-        #[cfg(any(feature = "none", feature = "solid_fmp3"))]
-        #[cfg_attr(
-            feature = "doc_cfg",
-            doc(cfg(any(feature = "none", feature = "solid_fmp3")))
-        )]
         pub fn processor_affinity(self, value: impl IntoProcessorSet) -> Self {
+            // On a uniprocessor system, panic when an empty set is given
+            // because it's a very pathological condition, and we don't want to
+            // go to the length of making `finish` return `E_PAR` for such a
+            // condition
+            #[cfg(not(feature = "solid_fmp3"))]
+            value.assert_non_empty();
+
             Builder {
-                #[cfg(not(feature = "none"))]
+                #[cfg(feature = "solid_fmp3")]
                 raw: abi::T_CTSK {
                     affinity: value.into_uint_t(),
                     ..self.raw

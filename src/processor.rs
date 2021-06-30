@@ -1,6 +1,8 @@
 //! Multiprocessing
-use core::mem::MaybeUninit;
+#[allow(unused_imports)]
+use core::{fmt, mem::MaybeUninit};
 
+#[allow(unused_imports)]
 use crate::{
     abi,
     error::{Error, ErrorCode, ErrorKind, Kind},
@@ -10,7 +12,7 @@ define_error_kind! {
     /// Error type for [`current`].
     pub enum CurrentIdError {
         /// The CPU lock state is active.
-        #[cfg(not(feature = "none"))]
+        #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
         BadContext,
     }
 }
@@ -18,7 +20,7 @@ define_error_kind! {
 impl ErrorKind for CurrentIdError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
-            #[cfg(not(feature = "none"))]
+            #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
             abi::E_CTX => Some(Self::BadContext(Kind::from_error_code(code))),
             _ => None,
         }
@@ -27,12 +29,43 @@ impl ErrorKind for CurrentIdError {
 
 /// Refers to a single processor in a multi-processor system. The stored
 /// processor ID is not guaranteed to be valid but is guaranteed to be non-null.
+///
+/// In a uniprocessor kernel, this is a zero-sized type.
 #[repr(C)]
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub struct Processor {
+    #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
     raw: abi::NonNullID,
+    _private: (),
 }
 
+impl fmt::Debug for Processor {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Processor({:?})", self.as_raw())
+    }
+}
+
+#[cfg(not(any(feature = "fmp3", feature = "solid_fmp3")))]
+#[cfg_attr(
+    feature = "doc_cfg",
+    doc(cfg(not(any(feature = "fmp3", feature = "solid_fmp3"))))
+)]
+impl Processor {
+    /// The only procesor in a uniprocessor system.
+    pub const UNIPROCESSOR: Self = Self { _private: () };
+
+    /// Used by the `Debug` impl
+    #[cfg(not(feature = "none"))]
+    fn as_raw(self) -> () {
+        ()
+    }
+}
+
+#[cfg(any(feature = "fmp3", feature = "solid_fmp3", feature = "none"))]
+#[cfg_attr(
+    feature = "doc_cfg",
+    doc(cfg(any(feature = "fmp3", feature = "solid_fmp3")))
+)]
 impl Processor {
     /// Construct `Processor` from a raw processor ID.
     #[inline]
@@ -48,19 +81,32 @@ impl Processor {
     /// Construct `Processor` from a non-null raw processor ID.
     #[inline]
     pub const fn from_raw_nonnull(raw: abi::NonNullID) -> Self {
-        Self { raw }
+        match () {
+            #[cfg(feature = "none")]
+            () => {
+                let _ = raw;
+                Self::UNIPROCESSOR
+            }
+            #[cfg(not(feature = "none"))]
+            () => Self { raw, _private: () },
+        }
     }
 
     /// Get a raw processor ID.
     #[inline]
     pub const fn as_raw(self) -> abi::ID {
-        self.raw.get()
+        self.as_raw_nonnull().get()
     }
 
     /// Get a raw processor ID as [`abi::NonNullID`].
     #[inline]
     pub const fn as_raw_nonnull(self) -> abi::NonNullID {
-        self.raw
+        match () {
+            #[cfg(feature = "none")]
+            () => unsafe { abi::NonNullID::new_unchecked(1) },
+            #[cfg(not(feature = "none"))]
+            () => self.raw,
+        }
     }
 }
 
@@ -69,7 +115,7 @@ impl Processor {
 #[doc(alias = "get_pid")]
 pub fn current() -> Result<Processor, Error<CurrentIdError>> {
     match () {
-        #[cfg(not(feature = "none"))]
+        #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
         () => unsafe {
             let mut out = MaybeUninit::uninit();
             Error::err_if_negative(abi::get_pid(out.as_mut_ptr()))?;
@@ -77,6 +123,13 @@ pub fn current() -> Result<Processor, Error<CurrentIdError>> {
                 out.assume_init(),
             )))
         },
+
+        #[cfg(not(any(feature = "fmp3", feature = "solid_fmp3", feature = "none")))]
+        () => {
+            // Uniprocessor
+            Ok(Processor::UNIPROCESSOR)
+        }
+
         #[cfg(feature = "none")]
         () => unimplemented!(),
     }
