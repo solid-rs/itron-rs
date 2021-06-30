@@ -1589,7 +1589,6 @@ mod owned {
                 #[cfg(not(feature = "none"))]
                 raw: abi::T_CTSK {
                     stksz: size,
-
                     stk: core::ptr::null_mut(),
                     ..self.raw
                 },
