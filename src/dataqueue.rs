@@ -432,6 +432,12 @@ impl Info {
         }
     }
 
+    /// Get a flag indicating whether the dataqueue is empty.
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
     /// Get the first waiting sender's task ID.
     #[inline]
     pub fn first_waiting_sending_task_id(&self) -> Option<abi::NonNullID> {

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - **Added:** `itron::processor::Processor` now implements `TryFrom<usize>`
 - **Added:** `itron::macros`
+- **Added:** `itron::{dataqueue, messagebuffer}::Info::is_empty`
 
 ## [0.1.4] - 2021-06-30
 

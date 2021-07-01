@@ -1499,6 +1499,7 @@ mod owned {
         }
 
         impl IntoProcessorSet for Processor {
+            #[allow(clippy::unnecessary_cast)] // <https://github.com/rust-lang/rust-clippy/issues/6923>
             #[doc(hidden)]
             #[inline]
             fn into_uint_t(self) -> abi::uint_t {

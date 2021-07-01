@@ -421,6 +421,13 @@ impl Info {
         }
     }
 
+    /// Get a flag indicating whether the message buffer is empty (i.e.,
+    /// contains no messages).
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
     /// Get the first waiting sender's task ID.
     #[inline]
     pub fn first_waiting_sending_task_id(&self) -> Option<abi::NonNullID> {
@@ -552,7 +559,7 @@ impl MessageBufferRef<'_> {
                 let size = core::mem::size_of_val(message)
                     .try_into()
                     .ok()
-                    .ok_or(Error::new_unchecked(ErrorCode::new_unchecked(abi::E_PAR)))?;
+                    .ok_or_else(|| Error::new_unchecked(ErrorCode::new_unchecked(abi::E_PAR)))?;
                 Error::err_if_negative(abi::snd_mbf(
                     self.as_raw(),
                     message as *const _ as *const u8,
@@ -584,7 +591,7 @@ impl MessageBufferRef<'_> {
                 let size = core::mem::size_of_val(message)
                     .try_into()
                     .ok()
-                    .ok_or(Error::new_unchecked(ErrorCode::new_unchecked(abi::E_PAR)))?;
+                    .ok_or_else(|| Error::new_unchecked(ErrorCode::new_unchecked(abi::E_PAR)))?;
                 Error::err_if_negative(abi::tsnd_mbf(
                     self.as_raw(),
                     message as *const _ as *const u8,
@@ -613,7 +620,7 @@ impl MessageBufferRef<'_> {
                 let size = core::mem::size_of_val(message)
                     .try_into()
                     .ok()
-                    .ok_or(Error::new_unchecked(ErrorCode::new_unchecked(abi::E_PAR)))?;
+                    .ok_or_else(|| Error::new_unchecked(ErrorCode::new_unchecked(abi::E_PAR)))?;
                 Error::err_if_negative(abi::psnd_mbf(
                     self.as_raw(),
                     message as *const _ as *const u8,

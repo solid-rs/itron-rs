@@ -56,9 +56,7 @@ impl Processor {
 
     /// Used by the `Debug` impl
     #[cfg(not(feature = "none"))]
-    fn as_raw(self) -> () {
-        ()
-    }
+    fn as_raw(self) {}
 }
 
 #[cfg(any(feature = "fmp3", feature = "solid_fmp3", feature = "none"))]
