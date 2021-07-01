@@ -62,6 +62,9 @@ exd_tsk = []
 [dependencies]
 tt-call = { version = "1.0.8", optional = true }
 
+[dev-dependencies]
+compiletest = { version = "0.7", package = "compiletest_rs" }
+
 [package.metadata.docs.rs]
 # choose `none` to maximize the wrapper generation.
 features = ["doc_cfg", "nightly", "unstable", "none"]
