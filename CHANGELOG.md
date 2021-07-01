@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.1.6] - 2021-07-01
 
 - **Added:** `itron::macros::{match_kernel, tt_is_kernel}` now support OR patterns
 - **Fixed:** The macros in `itron::macros::*` now locate `tt_call` correctly
@@ -52,7 +53,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial release.
 
-[Unreleased]: https://github.com/kawadakk/itron-rs/compare/0.1.5...main
+[Unreleased]: https://github.com/kawadakk/itron-rs/compare/0.1.6...main
+[0.1.6]: https://github.com/kawadakk/itron-rs/compare/0.1.5...0.1.6
 [0.1.5]: https://github.com/kawadakk/itron-rs/compare/0.1.4...0.1.5
 [0.1.4]: https://github.com/kawadakk/itron-rs/compare/0.1.3...0.1.4
 [0.1.3]: https://github.com/kawadakk/itron-rs/compare/0.1.2...0.1.3
