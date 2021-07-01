@@ -27,7 +27,7 @@ pub macro kernel() {
 ///
 /// ```rust
 /// itron::macros::match_kernel! {
-///     "asp3" => { fn say() { println!("We are running on TOPPERS/ASP3, yay!"); } }
+///     "asp3" | "solid_asp3" => { fn say() { println!("We are running on TOPPERS/ASP3, yay!"); } }
 ///     "nonexistent_kernel" => { call_nonexistent_function(); }
 ///     _ => { fn say() { println!("This kernel looks like something new!"); } }
 /// }
@@ -39,7 +39,7 @@ pub macro kernel() {
 ///
 /// ```rust,compile_fail
 /// match itron::macros::kernel!() {
-///     "asp3" => { fn say() { println!("We are running on TOPPERS/ASP3, yay!"); } }
+///     "asp3" | "solid_asp3" => { fn say() { println!("We are running on TOPPERS/ASP3, yay!"); } }
 ///     "nonexistent_kernel" => { call_nonexistent_function(); }
 ///         // ERROR: `call_nonexistent_function` is undefined
 ///     _ => { fn say() { println!("This kernel looks like something new!"); } }
@@ -49,13 +49,13 @@ pub macro kernel() {
 ///
 pub macro match_kernel(
     $(
-        $kernel:literal => { $($tt:tt)* }
+        $( $kernel:literal )|+ => { $($tt:tt)* }
     )*
     _ => { $($else:tt)* }
 ) {
     match_kernel_inner! {
         $(
-            $kernel => { $($tt)* }
+            $( $kernel )|+ => { $($tt)* }
         )*
         _ => { $($else)* }
     }
@@ -65,12 +65,12 @@ pub macro match_kernel(
 #[allow(unused_macros)] // possible bug
 macro match_kernel_inner {
     (
-        $kernel:literal => { $($tt:tt)* }
+        $( $kernel:literal )|+ => { $($tt:tt)* }
         $($rest:tt)*
     ) => {
         tt_call::tt_if! {
             condition = [{ $crate::macros::tt_is_kernel }]
-            input = [{ $kernel }]
+            input = [{ $( $kernel )|+ }]
             true = [{ $($tt)* }]
             false = [{
                 match_kernel_inner! { $($rest)* }

@@ -4,6 +4,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+- **Added:** `itron::macros::{match_kernel, tt_is_kernel}` now support OR patterns
+
 ## [0.1.5] - 2021-07-01
 
 - **Added:** `itron::processor::Processor` now implements `TryFrom<usize>`

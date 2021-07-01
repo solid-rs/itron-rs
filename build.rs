@@ -77,7 +77,7 @@ fn main() {
             pub macro tt_is_kernel {{
                 (
                     $caller:tt
-                    input = [{{ "{kernel}" }}]
+                    input = [{{ "{kernel}" $(| $($rest:literal)|+ )? }}]
                 ) => {{
                     tt_call::tt_return! {{
                         $caller
@@ -86,7 +86,16 @@ fn main() {
                 }},
                 (
                     $caller:tt
-                    input = [{{ $other_kernel:literal }}]
+                    input = [{{ $other_kernel:literal $(| $($rest:literal)|+ )? }}]
+                ) => {{
+                    tt_is_kernel! {{
+                        $caller
+                        input = [{{ $( $($rest)|+ )? }}]
+                    }}
+                }},
+                (
+                    $caller:tt
+                    input = [{{ }}]
                 ) => {{
                     tt_call::tt_return! {{
                         $caller
