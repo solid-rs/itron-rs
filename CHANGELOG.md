@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.1.7] - 2021-07-01
 
 - **Fixed:** The macros in `itron::macros::match_kernel` did not match anything
 
@@ -56,7 +57,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial release.
 
-[Unreleased]: https://github.com/kawadakk/itron-rs/compare/0.1.6...main
+[Unreleased]: https://github.com/kawadakk/itron-rs/compare/0.1.7...main
+[0.1.7]: https://github.com/kawadakk/itron-rs/compare/0.1.6...0.1.7
 [0.1.6]: https://github.com/kawadakk/itron-rs/compare/0.1.5...0.1.6
 [0.1.5]: https://github.com/kawadakk/itron-rs/compare/0.1.4...0.1.5
 [0.1.4]: https://github.com/kawadakk/itron-rs/compare/0.1.3...0.1.4
