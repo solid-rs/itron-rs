@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 - **Added:** `itron::processor::Processor` now implements `TryFrom<usize>`
+- **Added:** `itron::macros`
 
 ## [0.1.4] - 2021-06-30
 

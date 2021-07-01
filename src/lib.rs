@@ -20,6 +20,13 @@ pub mod _changelog_ {}
 
 pub mod abi;
 
+#[cfg(all(feature = "nightly", feature = "unstable", feature = "tt-call"))]
+#[cfg_attr(
+    feature = "doc_cfg",
+    doc(cfg(all(feature = "nightly", feature = "unstable", feature = "tt-call")))
+)]
+pub mod macros;
+
 macro_rules! unstable_module {
     {$(
         $( #[macro_use $($unused:tt)*] )*

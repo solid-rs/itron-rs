@@ -60,10 +60,11 @@ systim_local = []
 exd_tsk = []
 
 [dependencies]
-
+# (unstable) Enables macros that follow `tt-call`'s convention
+tt-call = { version = "1.0.7", optional = true }
 
 [package.metadata.docs.rs]
 # choose `none` to maximize the wrapper generation.
-features = ["doc_cfg", "nightly", "unstable", "none"]
+features = ["doc_cfg", "nightly", "unstable", "none", "tt-call"]
 # only build the default target
 targets = []

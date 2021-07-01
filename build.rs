@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fmt::Write, fs, path::Path};
 
 fn main() {
     // Validate the kernel selection and select `std` if none are selected
@@ -26,4 +26,79 @@ fn main() {
         println!("cargo:rustc-cfg=feature=\"systim_local\"");
         println!("cargo:rustc-cfg=feature=\"exd_tsk\"");
     }
+
+    // Generate code for `itron::macros`
+    let mut macros_rs = String::new();
+    macro_rules! w {
+        ($($tt:tt)*) => {
+            write!(macros_rs, $($tt)*).unwrap()
+        };
+    }
+
+    for kernel in KERNEL_LIST.iter().cloned().chain(["none"]) {
+        w!(
+            r#"
+            /// Get the kernel selected by a Cargo feature.
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// let kernel = tt_call::tt_call! {{ macro = [{{ itron::macros::tt_kernel }}] }};
+            ///
+            /// println!("We are running on {{}}", kernel);
+            /// ```
+            ///
+            #[cfg(feature = "{kernel}")]
+            pub macro tt_kernel($caller:tt) {{
+                tt_call::tt_return! {{
+                    $caller
+                    output = [{{ "{kernel}" }}]
+                }}
+            }}
+            "#,
+            kernel = kernel,
+        );
+        w!(
+            r#"
+            /// Determine if this crate was compiled for the specified kernel.
+            ///
+            /// # Example
+            ///
+            /// ```
+            /// tt_call::tt_if! {{
+            ///     condition = [{{ itron::macros::tt_is_kernel }}]
+            ///     input = [{{ "asp3" }}]
+            ///     true = [{{ println!("We are on TOPPERS/ASP3, yay!"); }}]
+            ///     false = [{{}}]
+            /// }}
+            /// ```
+            ///
+            #[cfg(feature = "{kernel}")]
+            pub macro tt_is_kernel {{
+                (
+                    $caller:tt
+                    input = [{{ "{kernel}" }}]
+                ) => {{
+                    tt_call::tt_return! {{
+                        $caller
+                        is = [{{ true }}]
+                    }}
+                }},
+                (
+                    $caller:tt
+                    input = [{{ $other_kernel:literal }}]
+                ) => {{
+                    tt_call::tt_return! {{
+                        $caller
+                        is = [{{ false }}]
+                    }}
+                }},
+            }}
+            "#,
+            kernel = kernel,
+        );
+    }
+
+    let out_dir = env::var_os("OUT_DIR").unwrap();
+    fs::write(&Path::new(&out_dir).join("macros.rs"), &macros_rs).unwrap();
 }
