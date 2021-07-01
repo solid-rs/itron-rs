@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 - **Added:** `itron::macros::{match_kernel, tt_is_kernel}` now support OR patterns
+- **Fixed:** The macros in `itron::macros::*` now locate `tt_call` correctly
 
 ## [0.1.5] - 2021-07-01
 

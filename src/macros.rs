@@ -6,6 +6,10 @@
 
 include!(concat!(env!("OUT_DIR"), "/macros.rs"));
 
+// Make `tt_call` available to the following macros' expansion
+#[doc(hidden)]
+pub use tt_call;
+
 /// Expand to the current kernel's name (e.g., `"asp3"`).
 ///
 /// # Examples
