@@ -16,7 +16,7 @@ keywords = ["rtos", "toppers", "kernel"]
 default = []
 nightly = ["doc_cfg"]
 doc_cfg = []
-unstable = []
+unstable = ["tt-call"]
 
 # --------------------------------------------------------
 # Kernel selection
@@ -60,11 +60,10 @@ systim_local = []
 exd_tsk = []
 
 [dependencies]
-# (unstable) Enables macros that follow `tt-call`'s convention
-tt-call = { version = "1.0.7", optional = true }
+tt-call = { version = "1.0.8", optional = true }
 
 [package.metadata.docs.rs]
 # choose `none` to maximize the wrapper generation.
-features = ["doc_cfg", "nightly", "unstable", "none", "tt-call"]
+features = ["doc_cfg", "nightly", "unstable", "none"]
 # only build the default target
 targets = []

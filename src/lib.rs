@@ -20,10 +20,10 @@ pub mod _changelog_ {}
 
 pub mod abi;
 
-#[cfg(all(feature = "nightly", feature = "unstable", feature = "tt-call"))]
+#[cfg(all(feature = "nightly", feature = "unstable"))]
 #[cfg_attr(
     feature = "doc_cfg",
-    doc(cfg(all(feature = "nightly", feature = "unstable", feature = "tt-call")))
+    doc(cfg(all(feature = "nightly", feature = "unstable")))
 )]
 pub mod macros;
 

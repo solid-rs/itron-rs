@@ -30,7 +30,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_asp3 --features nightly,unstable,tt-call,asp3,dcre,rstr_task,messagebuf,ovrhdr,subprio
+          args: -p itron_asp3 --features nightly,unstable,asp3,dcre,rstr_task,messagebuf,ovrhdr,subprio
 
       - name: Rename the crate
         run: |
@@ -39,7 +39,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_solid_asp3 --features nightly,unstable,tt-call,solid_asp3,dcre,messagebuf,pi_mutex,exd_tsk
+          args: -p itron_solid_asp3 --features nightly,unstable,solid_asp3,dcre,messagebuf,pi_mutex,exd_tsk
 
       - name: Rename the crate
         run: |
@@ -48,7 +48,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_fmp3 --features nightly,unstable,tt-call,fmp3,systim_local
+          args: -p itron_fmp3 --features nightly,unstable,fmp3,systim_local
 
       - name: Rename the crate
         run: |
@@ -57,7 +57,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: -p itron_solid_fmp3 --features nightly,unstable,tt-call,solid_fmp3,dcre,systim_local,exd_tsk
+          args: -p itron_solid_fmp3 --features nightly,unstable,solid_fmp3,dcre,systim_local,exd_tsk
 
       # ------------------------------------------------------------------------
 
