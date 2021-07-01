@@ -59,7 +59,7 @@ pub macro match_kernel {
         _ => { $($wildcard:tt)* }
         $($rest:tt)*
     ) => {
-        compile_error!("anything that follows `_ => { ... }` never match")
+        compile_error!("anything that follow `_ => { ... }` never match")
     },
     (
         $( $kernel:tt )|+ => { $($tt:tt)* }
