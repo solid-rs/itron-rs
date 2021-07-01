@@ -4,6 +4,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+- **Fixed:** `itron::abi::exd_tsk` shouldn't be exposed unless `cfg(feature = "exd_tsk")`
+
 ## [0.1.7] - 2021-07-01
 
 - **Fixed:** The macros in `itron::macros::match_kernel` did not match anything

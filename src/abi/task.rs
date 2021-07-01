@@ -259,7 +259,10 @@ extern "C" {
 }
 
 /// 自タスクの終了＆削除
-#[cfg(any(feature = "solid_asp3", feature = "solid_fmp3"))]
+#[cfg(any(
+    all(feature = "solid_asp3", feature = "exd_tsk"),
+    all(feature = "solid_fmp3", feature = "exd_tsk")
+))]
 extern "C" {
     pub fn exd_tsk() -> ER;
 }
