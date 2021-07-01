@@ -1,6 +1,6 @@
 //! Multiprocessing
 #[allow(unused_imports)]
-use core::{fmt, mem::MaybeUninit};
+use core::{convert::TryFrom, fmt, mem::MaybeUninit};
 
 #[allow(unused_imports)]
 use crate::{
@@ -107,6 +107,44 @@ impl Processor {
             #[cfg(not(feature = "none"))]
             () => self.raw,
         }
+    }
+}
+
+/// The error type returned when a conversion from `usize` to [`Processor`]
+/// fails.
+///
+/// This can occur because of a number of reasons:
+///
+///  - The specified value is zero, which represents a null value.
+///
+///  - The specified value does not fit in [`abi::ID`].
+///
+///  - The target kernel does not support multiple processors, and the supplied
+///    value is not `1`.
+///
+/// Note that an attempt to create a `Processor` representing a non-existent
+/// processor is not guaranteed to fail.
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct ProcessorTryFromError(());
+
+impl TryFrom<usize> for Processor {
+    type Error = ProcessorTryFromError;
+
+    #[cfg(not(any(feature = "fmp3", feature = "solid_fmp3")))]
+    #[inline]
+    fn try_from(x: usize) -> Result<Self, Self::Error> {
+        if x == 1 {
+            Ok(Self::UNIPROCESSOR)
+        } else {
+            Err(ProcessorTryFromError(()))
+        }
+    }
+
+    #[cfg(any(feature = "fmp3", feature = "solid_fmp3"))]
+    #[inline]
+    fn try_from(x: usize) -> Result<Self, Self::Error> {
+        Self::from_raw(abi::ID::try_from(x).map_err(|_| ProcessorTryFromError(()))?)
+            .ok_or(ProcessorTryFromError(()))
     }
 }
 
