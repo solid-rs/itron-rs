@@ -51,25 +51,18 @@ pub macro kernel() {
 /// say(); // ERROR: Each arm's `say` is not accessible from here
 /// ```
 ///
-pub macro match_kernel(
-    $(
-        $( $kernel:literal )|+ => { $($tt:tt)* }
-    )*
-    _ => { $($else:tt)* }
-) {
-    match_kernel_inner! {
-        $(
-            $( $kernel )|+ => { $($tt)* }
-        )*
-        _ => { $($else)* }
-    }
-}
-
-#[doc(hidden)]
-#[allow(unused_macros)] // possible bug
-macro match_kernel_inner {
+pub macro match_kernel {
     (
-        $( $kernel:literal )|+ => { $($tt:tt)* }
+        _ => { $($wildcard:tt)* }
+    ) => { $($wildcard)* },
+    (
+        _ => { $($wildcard:tt)* }
+        $($rest:tt)*
+    ) => {
+        compile_error!("anything that follows `_ => { ... }` never match")
+    },
+    (
+        $( $kernel:tt )|+ => { $($tt:tt)* }
         $($rest:tt)*
     ) => {
         tt_call::tt_if! {
@@ -77,11 +70,8 @@ macro match_kernel_inner {
             input = [{ $( $kernel )|+ }]
             true = [{ $($tt)* }]
             false = [{
-                match_kernel_inner! { $($rest)* }
+                match_kernel! { $($rest)* }
             }]
         }
     },
-    (
-        _ => { $($else:tt)* }
-    ) => { $($else)* },
 }
