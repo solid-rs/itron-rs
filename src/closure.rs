@@ -8,6 +8,9 @@ use core::mem::MaybeUninit;
 ///
 /// When calling the function pointer, the second value must be provided as
 /// the parameter.
+///
+/// If the original closure was `!Send`, it can only be called from the creator
+/// thread.
 pub type Closure = (unsafe extern "C" fn(abi::EXINF), abi::EXINF);
 
 /// Conversion to [`Closure`].
