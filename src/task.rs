@@ -1656,7 +1656,7 @@ mod owned {
         #[inline]
         pub fn start(
             self,
-            value: impl crate::closure::IntoClosure,
+            value: impl crate::closure::IntoClosure + Send,
         ) -> Builder<(), Stack, InitialPriority> {
             let (task, exinf) = value.into_closure();
             Builder {

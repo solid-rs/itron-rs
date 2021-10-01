@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 - **Fixed:** `itron::abi::exd_tsk` shouldn't be exposed unless `cfg(feature = "exd_tsk")`
+- **Fixed:** Require `Send`-ness for the `impl IntoClosure` passed to `task::Builder::start`
 
 ## [0.1.7] - 2021-07-01
 
