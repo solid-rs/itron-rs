@@ -1,9 +1,5 @@
 Rust interface to interact with operating systems based on μITRON and its derivatives.
 
-*This crate currently requires the recently-added [`extended_key_value_attributes`] compiler feature, which is only stabilized in the nightly compiler (at the point of writing).*
-
-[`extended_key_value_attributes`]: https://caniuse.rs/features/extended_key_value_attrs
-
 ## Kernel Selection
 
 This crate exposes a Cargo feature for each supported RTOS kernel
