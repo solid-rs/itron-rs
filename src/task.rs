@@ -115,8 +115,8 @@ impl ErrorKind for CancelActivateAllError {
 }
 
 define_error_kind! {
-    /// Error type for [`TaskRef::set_priority`].
-    pub enum SetPriorityError {
+    /// Error type for [`TaskRef::set_base_priority`].
+    pub enum SetBasePriorityError {
         #[cfg(not(feature = "none"))]
         BadContext,
         #[cfg(not(feature = "none"))]
@@ -141,7 +141,7 @@ define_error_kind! {
     }
 }
 
-impl ErrorKind for SetPriorityError {
+impl ErrorKind for SetBasePriorityError {
     fn from_error_code(code: ErrorCode) -> Option<Self> {
         match code.get() {
             #[cfg(not(feature = "none"))]
@@ -1163,10 +1163,13 @@ impl TaskRef<'_> {
         }
     }
 
-    /// `chg_pri`: Change the task's priority.
+    /// `chg_pri`: Change the task's base priority.
     #[inline]
     #[doc(alias = "chg_pri")]
-    pub fn set_priority(self, new_priority: Priority) -> Result<(), Error<SetPriorityError>> {
+    pub fn set_base_priority(
+        self,
+        new_priority: Priority,
+    ) -> Result<(), Error<SetBasePriorityError>> {
         match () {
             #[cfg(not(feature = "none"))]
             () => unsafe {
@@ -1179,6 +1182,9 @@ impl TaskRef<'_> {
     }
 
     /// `get_pri`: Get the task's priority.
+    ///
+    /// Use [`TaskRef::info`][] and [`Info::base_priority`][] to get the base
+    /// priority.
     #[inline]
     #[doc(alias = "get_pri")]
     pub fn priority(self) -> Result<Priority, Error<PriorityError>> {
