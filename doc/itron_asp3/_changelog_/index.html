@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Changelog (`CHANGELOG.md`)"><meta name="keywords" content="rust, rustlang, rust-lang, _changelog_"><title>itron_asp3::_changelog_ - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script>
+    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../itron_asp3/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a><h2 class="location">Module _changelog_</h2><div class="sidebar-elems"><div id="sidebar-vars" data-name="_changelog_" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Module <a href="../index.html">itron_asp3</a>::<wbr><a class="mod" href="#">_changelog_</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../../src/itron_asp3/lib.rs.html#19" title="goto source code">[src]</a></span></h1><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Changelog (<code>CHANGELOG.md</code>)</p>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="http://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
+and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h3 id="unreleased" class="section-header"><a href="#unreleased">Unreleased</a></h3>
+<ul>
+<li><strong>Changed:</strong> <code>itron::task::Task::{set_priority → set_base_priority}</code></li>
+</ul>
+<h3 id="019---2021-11-19" class="section-header"><a href="#019---2021-11-19">0.1.9 - 2021-11-19</a></h3>
+<ul>
+<li>Documentation update</li>
+</ul>
+<h3 id="018---2021-10-01" class="section-header"><a href="#018---2021-10-01">0.1.8 - 2021-10-01</a></h3>
+<ul>
+<li><strong>Fixed:</strong> <code>itron::abi::exd_tsk</code> shouldn’t be exposed unless <code>cfg(feature = &quot;exd_tsk&quot;)</code></li>
+<li><strong>Fixed:</strong> Require <code>Send</code>-ness for the <code>impl IntoClosure</code> passed to <code>task::Builder::start</code></li>
+</ul>
+<h3 id="017---2021-07-01" class="section-header"><a href="#017---2021-07-01">0.1.7 - 2021-07-01</a></h3>
+<ul>
+<li><strong>Fixed:</strong> The macros in <code>itron::macros::match_kernel</code> did not match anything</li>
+</ul>
+<h3 id="016---2021-07-01" class="section-header"><a href="#016---2021-07-01">0.1.6 - 2021-07-01</a></h3>
+<ul>
+<li><strong>Added:</strong> <code>itron::macros::{match_kernel, tt_is_kernel}</code> now support OR patterns</li>
+<li><strong>Fixed:</strong> The macros in <code>itron::macros::*</code> now locate <code>tt_call</code> correctly</li>
+</ul>
+<h3 id="015---2021-07-01" class="section-header"><a href="#015---2021-07-01">0.1.5 - 2021-07-01</a></h3>
+<ul>
+<li><strong>Added:</strong> <code>itron::processor::Processor</code> now implements <code>TryFrom&lt;usize&gt;</code></li>
+<li><strong>Added:</strong> <code>itron::macros</code></li>
+<li><strong>Added:</strong> <code>itron::{dataqueue, messagebuffer}::Info::is_empty</code></li>
+</ul>
+<h3 id="014---2021-06-30" class="section-header"><a href="#014---2021-06-30">0.1.4 - 2021-06-30</a></h3>
+<ul>
+<li><strong>Changed:</strong> <code>itron::task::Builder::{stack → stack_size}</code></li>
+<li><strong>Changed:</strong> <code>itron::{processor, task::{Task::activate_on, Builder::initial_processor}}</code>, etc. are now exposed on uniprocessor kernels</li>
+<li><strong>Added:</strong> <code>itron::abi::{acre_cyc, acre_alm, acre_isr}</code></li>
+<li><strong>Added:</strong> <code>itron::abi::acre_mpf</code> when <code>cfg(all(feature = &quot;solid_asp3&quot;, feature = &quot;dcre&quot;))</code></li>
+<li><strong>Added:</strong> <code>itron::abi::exd_tsk</code></li>
+<li><strong>Added:</strong> <code>itron::task::Builder::finish_and_activate</code></li>
+<li><strong>Added:</strong> <code>itron::task::TaskRef::migrate</code></li>
+<li><strong>Added:</strong> <code>itron::memorypool::MemoryPool[Ref]</code></li>
+<li><strong>Added:</strong> <code>itron::messagebuffer::MessageBuffer[Ref]</code></li>
+</ul>
+<h3 id="013---2021-06-23" class="section-header"><a href="#013---2021-06-23">0.1.3 - 2021-06-23</a></h3>
+<ul>
+<li><strong>Added:</strong> <code>itron::abi::E_OK</code></li>
+<li><strong>Added:</strong> <code>itron::dataqueue::Dataqueue[Ref]</code></li>
+<li><strong>Changed:</strong> <code>itron::processor::current</code> now returns <code>Result&lt;Processor, _&gt;</code> instead of <code>Result&lt;Option&lt;abi::NonNullID&gt;, _&gt;</code>.</li>
+</ul>
+<h3 id="012---2021-06-21" class="section-header"><a href="#012---2021-06-21">0.1.2 - 2021-06-21</a></h3>
+<ul>
+<li><strong>Added:</strong> <code>itron::{mutex::TryLockError, semaphore::PollError}::Timeout</code></li>
+</ul>
+<h3 id="011---2021-06-21" class="section-header"><a href="#011---2021-06-21">0.1.1 - 2021-06-21</a></h3>
+<ul>
+<li><strong>Added:</strong> <code>itron::abi::{TA_TPRI, TA_WMUL, TA_CLR, TA_RTSK, TA_CEILING, TWF_*, TTW_*}</code></li>
+<li><strong>Added:</strong> <code>itron::semaphore::Semaphore[Ref]</code></li>
+<li><strong>Added:</strong> <code>itron::mutex::Mutex[Ref]</code></li>
+<li><strong>Added:</strong> <code>itron::processor</code></li>
+<li><strong>Added:</strong> <code>itron::abi::{*_mbf}</code> (message buffers) and Cargo feature <code>messagebuf</code></li>
+<li><strong>Added:</strong> <code>itron::abi::{*_ovr}</code> (overrun handlers) and Cargo feature <code>ovrhdr</code></li>
+<li><strong>Added:</strong> <code>itron::abi::chg_spr</code> (change task subpriority) and Cargo feature <code>subprio</code></li>
+<li><strong>Added:</strong> <code>itron::abi::TA_INHERIT</code> (priority inheritance mutexes) and Cargo feature <code>pi_mutex</code></li>
+<li><strong>Added:</strong> Cargo features <code>fmp3</code>, <code>solid_asp3</code>, and <code>solid_fmp3</code></li>
+</ul>
+<h3 id="010---2021-06-15" class="section-header"><a href="#010---2021-06-15">0.1.0 - 2021-06-15</a></h3>
+<ul>
+<li>Initial release.</li>
+</ul>
+</div></details></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="itron_asp3" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
+</body></html>

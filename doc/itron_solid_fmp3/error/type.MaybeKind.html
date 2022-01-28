@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Placeholder for error kind variants."><meta name="keywords" content="rust, rustlang, rust-lang, MaybeKind"><title>MaybeKind in itron_solid_fmp3::error - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script>
+    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc type"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../itron_solid_fmp3/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a><h2 class="location">Type Definition MaybeKind</h2><div class="sidebar-elems"><h2 class="location">Other items in<br><a href="../index.html">itron_solid_fmp3</a>::<wbr><a href="index.html">error</a></h2><div id="sidebar-vars" data-name="MaybeKind" data-ty="type" data-relpath=""></div><script defer src="sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Type Definition <a href="../index.html">itron_solid_fmp3</a>::<wbr><a href="index.html">error</a>::<wbr><a class="type" href="#">MaybeKind</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../../src/itron_solid_fmp3/error.rs.html#243" title="goto source code">[src]</a></span></h1><div class="docblock item-decl"><pre class="rust typedef"><code>pub type MaybeKind = <a class="primitive" href="https://doc.rust-lang.org/nightly/core/primitive.unit.html">()</a>;</code></pre></div><div class="item-info"><div class="stab portability">This is supported on <strong>crate feature <code>unstable</code></strong> only.</div></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Placeholder for error kind variants.</p>
+<p><strong>Do not refer to this type in your code!</strong>
+This type exists purely for documentation purposes. This type is replaced
+with the inhabited type <a href="struct.Kind.html" title="Kind"><code>Kind</code></a> if the variant is valid for the current
+target kernel or the uninhabited type <a href="enum.Never.html" title="Never"><code>Never</code></a> otherwise. This technique
+lets us match against error kinds that do not exist in some kernels without
+causing a compilation error.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#![<span class="ident">feature</span>(<span class="ident">exhaustive_patterns</span>)]</span>
+<span class="kw">use</span> <span class="ident">itron::error</span>::{<span class="ident">Kind</span>, <span class="ident">Never</span>};
+
+<span class="kw">enum</span> <span class="ident">ExampleError</span> {
+    <span class="ident">Error1</span>(<span class="ident">Kind</span>),
+    <span class="ident">Error2</span>(<span class="ident">Never</span>),
+    <span class="comment">// displayed as the following in the doc</span>
+    <span class="comment">//   Error1(MaybeKind),</span>
+    <span class="comment">//   Error2(MaybeKind),</span>
+}
+
+<span class="comment">// Portable code that handles all kinds</span>
+<span class="kw">match</span> <span class="ident">error</span> {
+    <span class="comment">// `_` = don&#39;t care; the arm is just ignored if the</span>
+    <span class="comment">//       error kind does not exist in this kernel</span>
+    <span class="ident">ExampleError::Error1</span>(<span class="kw">_</span>) =&gt; <span class="macro">println!</span>(<span class="string">&quot;error1&quot;</span>),
+    <span class="ident">ExampleError::Error2</span>(<span class="kw">_</span>) =&gt; <span class="macro">println!</span>(<span class="string">&quot;error2&quot;</span>),
+}
+
+<span class="comment">// Portable code that handles some kinds</span>
+<span class="kw">match</span> <span class="ident">error</span> {
+    <span class="ident">ExampleError::Error2</span>(<span class="kw">_</span>) =&gt; <span class="macro">println!</span>(<span class="string">&quot;error2&quot;</span>),
+    <span class="kw">_</span> =&gt; <span class="macro">println!</span>(<span class="string">&quot;other&quot;</span>),
+}
+
+<span class="comment">// Non-portable code that handles all kinds</span>
+<span class="kw">match</span> <span class="ident">error</span> {
+    <span class="comment">// `Kind(_)` = assume that the error kind exists;</span>
+    <span class="comment">//             raise a compile error if this assumption is broken</span>
+    <span class="ident">ExampleError::Error1</span>(<span class="ident">Kind</span>(<span class="kw">_</span>)) =&gt; <span class="macro">println!</span>(<span class="string">&quot;error1&quot;</span>),
+
+    <span class="comment">// (no arm) = assume that the error kind does not exist;</span>
+    <span class="comment">//            raise a compile error if this assumption is broken</span>
+    <span class="comment">// (This requires `#[feature(exhaustive_patterns)]` for now.)</span>
+}</code></pre></div>
+</div></details></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="itron_solid_fmp3" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
+</body></html>
