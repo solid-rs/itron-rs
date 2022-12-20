@@ -1,7 +1,7 @@
 //! Provides macros that allow downstream crates to examine the choice of
 //! the target kernel.
 //!
-//! This module's macros whose names start with `tt_` follows `tt-call`'s token
+//! This module's macros whose names start with `tt_` follow `tt-call`'s token
 //! tree calling convention.
 
 include!(concat!(env!("OUT_DIR"), "/macros.rs"));
