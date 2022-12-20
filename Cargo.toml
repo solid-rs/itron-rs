@@ -1,7 +1,7 @@
 [package]
 name = "itron"
 version = "0.1.9"
-license = "MIT OR Apache-2.0"
+license = "0BSD"
 edition = "2018"
 readme = "src/lib.md"
 description = "Interface to operating systems based on μITRON and its derivatives."
