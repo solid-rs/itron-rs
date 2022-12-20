@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["IntoClosure","Conversion to [`Closure`]."]],"type":[["Closure","A bundle of a function pointer and associated data."]]});

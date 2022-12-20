@@ -1,0 +1,1 @@
+initSidebarItems({"macro":[["kernel","Expand to the current kernel’s name (e.g., `\"asp3\"`)."],["match_kernel","Expand to the arm corresponding to the current kernel."],["tt_is_kernel","Determine if this crate was compiled for the specified kernel."],["tt_kernel","Get the kernel selected by a Cargo feature."]]});
