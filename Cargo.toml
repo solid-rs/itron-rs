@@ -1,9 +1,6 @@
 [package]
 name = "itron"
 version = "0.1.9"
-authors = [
-    "Tomoaki Kawada",
-]
 license = "MIT OR Apache-2.0"
 edition = "2018"
 readme = "src/lib.md"
